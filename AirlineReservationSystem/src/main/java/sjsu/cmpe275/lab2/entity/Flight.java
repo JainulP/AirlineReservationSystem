@@ -1,6 +1,7 @@
 package sjsu.cmpe275.lab2.entity;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.http.ResponseEntity;
 
 import javax.persistence.*;
 import java.util.Date;
