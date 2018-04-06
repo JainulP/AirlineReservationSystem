@@ -19,14 +19,14 @@ public class PassengerController {
 	 * 
 	 * 
 	 */
-	@RequestMapping(value="/{id}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML})
-	public ResponseEntity getPassengerJson(@PathVariable("id") Long id) throws JSONException {
-		JSONObject temp = new JSONObject();
-		System.out.println(id);
-		temp.put("value", id);
-	//	return new ResponseEntity(temp.toString(), HttpStatus.CREATED);
-		return true;
-	}
+//	@RequestMapping(value="/{id}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML})
+//	public ResponseEntity getPassengerJson(@PathVariable("id") Long id) throws JSONException {
+//		JSONObject temp = new JSONObject();
+//		System.out.println(id);
+//		temp.put("value", id);
+//	//	return new ResponseEntity(temp.toString(), HttpStatus.CREATED);
+//		return true;
+//	}
 	
 	
 }
