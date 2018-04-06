@@ -1,0 +1,10 @@
+
+*.iml
+.idea/*
+.idea/encodings.xml
+.idea/libraries/Maven__antlr_antlr_2_7_7.xml
+AirlineReservationSystem/target/*
+.metadata/*
+.recommenders/*
+RemoteSystemsTempFiles/.project
+*.prefs
