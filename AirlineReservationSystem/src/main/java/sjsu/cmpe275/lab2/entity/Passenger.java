@@ -3,103 +3,104 @@ package sjsu.cmpe275.lab2.entity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import java.util.List;
 
+@XmlRootElement
 @Entity
-@Table(name="PASSENGER")
+@Table(name = "PASSENGER")
 public class Passenger {
 
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column(name = "ID")
-    private String id;
+	@Id
+	@GeneratedValue(generator = "uuid")
+	@GenericGenerator(name = "uuid", strategy = "uuid2")
+	@Column(name = "ID")
+	private String id;
 
-    @Column(name="FIRST_NAME")
-    private String firstname;
+	@Column(name = "FIRST_NAME")
+	private String firstname;
 
-    @Column(name="LAST_NAME")
-    private String lastname;
+	@Column(name = "LAST_NAME")
+	private String lastname;
 
-    @Column(name="AGE")
-    private int age;
+	@Column(name = "AGE")
+	private int age;
 
-    @Column(name="GENDER")
-    private String gender;
+	@Column(name = "GENDER")
+	private String gender;
 
-    @Column(name="PHONE", unique=true)
-    private String phone;
+	@Column(name = "PHONE", unique = true)
+	private String phone;
 
+	// reservation made by the passenger should also be deleted.
+	@OneToMany(mappedBy = "passenger", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Reservation> reservations;
 
-    // reservation made by the passenger should also be deleted.
-    @OneToMany(mappedBy = "passenger",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<Reservation> reservations;
+	public Passenger() {
+	}
 
+	public Passenger(String firstname, String lastname, int age, String gender, String phone) {
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.age = age;
+		this.gender = gender;
+		this.phone = phone;
+	}
 
-    public Passenger() {
-    }
+	public String getId() {
+		return id;
+	}
 
-    public Passenger(String firstname, String lastname, int age, String gender, String phone) {
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.age = age;
-        this.gender = gender;
-        this.phone = phone;
-    }
+	public void setId(String id) {
+		this.id = id;
+	}
 
-    public String getId() {
-        return id;
-    }
+	public String getFirstname() {
+		return firstname;
+	}
 
-    public void setId(String id) {
-        this.id = id;
-    }
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
 
-    public String getFirstname() {
-        return firstname;
-    }
+	public String getLastname() {
+		return lastname;
+	}
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
 
-    public String getLastname() {
-        return lastname;
-    }
+	public int getAge() {
+		return age;
+	}
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
+	public void setAge(int age) {
+		this.age = age;
+	}
 
-    public int getAge() {
-        return age;
-    }
+	public String getGender() {
+		return gender;
+	}
 
-    public void setAge(int age) {
-        this.age = age;
-    }
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
 
-    public String getGender() {
-        return gender;
-    }
+	public String getPhone() {
+		return phone;
+	}
 
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
 
-    public String getPhone() {
-        return phone;
-    }
+	public List<Reservation> getReservations() {
+		return reservations;
+	}
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public List<Reservation> getReservations() {
-        return reservations;
-    }
-
-    public void setReservations(List<Reservation> reservations) {
-        this.reservations = reservations;
-    }
+	public void setReservations(List<Reservation> reservations) {
+		this.reservations = reservations;
+	}
 }
