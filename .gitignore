@@ -1,5 +1,6 @@
 
 *.iml
-.idea/compiler.xml
+.idea/*
 .idea/encodings.xml
 .idea/libraries/Maven__antlr_antlr_2_7_7.xml
+AirlineReservationSystem/target/*
