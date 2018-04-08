@@ -20,4 +20,43 @@ public class PassengerService {
 	public Passenger getPassenger(String passengerId) {
 		return passengerRepository.findById(passengerId).get();
 	}
+
+	/*
+	 * @param passenger create a passenger with the specified details
+	 * 
+	 * @return the passenger
+	 */
+	public Passenger createPassenger(Passenger passenger) {
+		return passengerRepository.save(passenger);
+	}
+
+	/*
+	 * @param passenger update a passenger with the specified details
+	 * 
+	 * @return the passenger
+	 */
+	public Passenger updatePassenger(Passenger passenger) {
+		Passenger passenger_temp = passengerRepository.findById(passenger.getId()).get();
+		passenger_temp.setFirstname(passenger.getFirstname());
+		passenger_temp.setLastname(passenger.getLastname());
+		passenger_temp.setGender(passenger.getGender());
+		passenger_temp.setPhone(passenger.getPhone());
+		passenger_temp.setAge(passenger.getAge());
+		return passengerRepository.save(passenger_temp);
+	}
+
+	/*
+	 * @param passengerId Id of the passenger to be deleted
+	 * 
+	 * @return the status of the operation
+	 */
+	public boolean deletePassenger(String passengerId) {
+		boolean doesExists = passengerRepository.existsById(passengerId);
+		if (doesExists) {
+			passengerRepository.deleteById(passengerId);
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
