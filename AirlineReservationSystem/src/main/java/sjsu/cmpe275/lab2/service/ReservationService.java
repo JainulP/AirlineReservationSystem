@@ -12,19 +12,23 @@ import java.util.Optional;
 @Service
 public class ReservationService {
 
-    @Autowired
-    private ReservationRepository reservationRepository;
-    @Autowired
-    private PassengerRepository passengerRepository;
+	@Autowired
+	private ReservationRepository reservationRepository;
+	@Autowired
+	private PassengerRepository passengerRepository;
 
-    public Reservation getReservation(String reservationNumber){
-        Optional<Reservation> reservation = reservationRepository.findById(reservationNumber);
-        if(reservation.isPresent()){
-            Reservation res= reservation.get();
-//            res.setPassenger(passengerRepository.getPassengerById(res.getPassenger().getId()));
-            return res;
-        }
-        else
-            return null;
-    }
+	public Reservation getReservation(String reservationNumber) {
+		Optional<Reservation> reservation = reservationRepository.findById(reservationNumber);
+		if (reservation.isPresent()) {
+			Reservation res = reservation.get();
+			// res.setPassenger(passengerRepository.getPassengerById(res.getPassenger().getId()));
+			return res;
+		} else
+			return null;
+	}
+
+	public Reservation createReservation(Reservation reservationTemp) {
+		Reservation reservation = reservationRepository.save(reservationTemp);
+		return reservation;
+	}
 }

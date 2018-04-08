@@ -4,8 +4,11 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.repository.Query;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import java.util.List;
 
+@XmlRootElement
 @Entity
 @Table(name="RESERVATION")
 public class Reservation {
