@@ -1,5 +1,6 @@
 package sjsu.cmpe275.lab2.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -36,6 +37,10 @@ public class Passenger {
 	// reservation made by the passenger should also be deleted.
 	@OneToMany(mappedBy = "passenger", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Reservation> reservations;
+
+	@JsonIgnore
+	@ManyToMany(mappedBy = "passengers",cascade = CascadeType.ALL)
+	private List<Flight> flights;
 
 	public Passenger() {
 	}
@@ -102,5 +107,13 @@ public class Passenger {
 
 	public void setReservations(List<Reservation> reservations) {
 		this.reservations = reservations;
+	}
+
+	public List<Flight> getFlights() {
+		return flights;
+	}
+
+	public void setFlights(List<Flight> flights) {
+		this.flights = flights;
 	}
 }

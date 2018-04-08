@@ -1,19 +1,20 @@
 package sjsu.cmpe275.lab2.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.http.ResponseEntity;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 import java.util.List;
 
+@XmlRootElement
 @Entity
 @Table(name="FLIGHT")
 public class Flight {
 
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(name = "FLIGHT_NUMBER",unique = true)
     private String flightNumber;
 
@@ -27,10 +28,10 @@ public class Flight {
     private String destinationTo;
 
     @Column(name="DEPARTURE_TIME")
-    private Date departureTime;
+    private String departureTime;
 
     @Column(name="ARRIVAL_TIME")
-    private Date arrivalTime;
+    private String arrivalTime;
 
     @Column(name="SEATS_LEFT")
     private int seatsLeft;
@@ -41,22 +42,28 @@ public class Flight {
     @Embedded
     private Plane plane;  // Embedded
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "flights")
     private List<Reservation> reservations;
 
-    @Transient
+    @ManyToMany
+    @JoinTable(name="PASSENGER_FLIGHT",
+            joinColumns = {@JoinColumn(name="FLIGHT_NUM", referencedColumnName ="FLIGHT_NUMBER")},
+            inverseJoinColumns = {@JoinColumn(name="PASSENGER_ID", referencedColumnName ="ID" )})
     private List<Passenger> passengers;
 
     public Flight() {
     }
 
-    public Flight(double price, String origin, String destinationTo, Date departureTime, Date arrivalTime, int seatsLeft, String description, Plane plane) {
+    //public Flight(String flightNumber,double price, String origin, String destinationTo, String departureTime, String arrivalTime, int seatsLeft, String description, Plane plane) {
+    public Flight(String flightNumber,double price, String origin, String destinationTo, String departureTime, String arrivalTime, String description, Plane plane) {
+        this.flightNumber = flightNumber;
         this.price = price;
         this.origin = origin;
         this.destinationTo = destinationTo;
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
-        this.seatsLeft = seatsLeft;
+        //this.seatsLeft = seatsLeft;
         this.description = description;
         this.plane = plane;
     }
@@ -93,19 +100,19 @@ public class Flight {
         this.destinationTo = destinationTo;
     }
 
-    public Date getDepartureTime() {
+    public String getDepartureTime() {
         return departureTime;
     }
 
-    public void setDepartureTime(Date departureTime) {
+    public void setDepartureTime(String departureTime) {
         this.departureTime = departureTime;
     }
 
-    public Date getArrivalTime() {
+    public String getArrivalTime() {
         return arrivalTime;
     }
 
-    public void setArrivalTime(Date arrivalTime) {
+    public void setArrivalTime(String arrivalTime) {
         this.arrivalTime = arrivalTime;
     }
 
@@ -141,11 +148,11 @@ public class Flight {
         this.passengers = passengers;
     }
 
-    public List<Reservation> getReservations() {
-        return reservations;
-    }
-
-    public void setReservations(List<Reservation> reservations) {
-        this.reservations = reservations;
-    }
+//    public List<Reservation> getReservations() {
+//        return reservations;
+//    }
+//
+//    public void setReservations(List<Reservation> reservations) {
+//        this.reservations = reservations;
+//    }
 }
