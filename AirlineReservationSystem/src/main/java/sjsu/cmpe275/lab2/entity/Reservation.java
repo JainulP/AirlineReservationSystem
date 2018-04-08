@@ -1,6 +1,7 @@
 package sjsu.cmpe275.lab2.entity;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.jpa.repository.Query;
 
 import javax.persistence.*;
 import java.util.List;
@@ -15,7 +16,7 @@ public class Reservation {
     @Column(name = "RESERVATION_NUMBER")
     private String reservationNumber;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name="PASSENGER_ID")
     private Passenger passenger;
 
