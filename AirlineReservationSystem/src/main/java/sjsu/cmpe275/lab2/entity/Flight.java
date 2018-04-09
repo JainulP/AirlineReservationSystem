@@ -1,6 +1,8 @@
 package sjsu.cmpe275.lab2.entity;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+
 import sjsu.cmpe275.lab2.utils.View;
 
 import javax.persistence.*;
@@ -11,12 +13,11 @@ import java.util.List;
 
 @XmlRootElement
 @Entity
-@Table(name="FLIGHT")
+@Table(name = "FLIGHT")
 public class Flight {
 
     @Id
     @Column(name = "FLIGHT_NUMBER",unique = true)
-    @JsonProperty(value ="flightNumber" )
     @JsonView({View.ReservationView.class,View.PassengerView.class,View.FlightView.class})
     private String flightNumber;
 

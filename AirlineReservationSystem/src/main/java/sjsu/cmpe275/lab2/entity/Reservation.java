@@ -1,9 +1,6 @@
 package sjsu.cmpe275.lab2.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.GenericGenerator;
 import sjsu.cmpe275.lab2.utils.View;
 
@@ -14,7 +11,7 @@ import java.util.List;
 
 @XmlRootElement
 @Entity
-@Table(name="RESERVATION")
+@Table(name = "RESERVATION")
 public class Reservation {
 
     @Id

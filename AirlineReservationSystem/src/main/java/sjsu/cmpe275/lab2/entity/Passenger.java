@@ -22,48 +22,39 @@ public class Passenger {
 	@GeneratedValue(generator = "uuid")
 	@GenericGenerator(name = "uuid", strategy = "uuid2")
 	@Column(name = "p_id")
-	@JsonView({View.ReservationView.class,View.PassengerView.class,View.FlightView.class})
+	@JsonView({ View.ReservationView.class, View.PassengerView.class, View.FlightView.class })
 	private String p_id;
 
 	@Column(name = "FIRST_NAME")
-	@JsonView({View.ReservationView.class,View.PassengerView.class,View.FlightView.class})
+	@JsonView({ View.ReservationView.class, View.PassengerView.class, View.FlightView.class })
 	private String firstname;
 
 	@Column(name = "LAST_NAME")
-	@JsonView({View.ReservationView.class,View.PassengerView.class,View.FlightView.class})
+	@JsonView({ View.ReservationView.class, View.PassengerView.class, View.FlightView.class })
 	private String lastname;
 
 	@Column(name = "AGE")
-	@JsonView({View.ReservationView.class,View.PassengerView.class,View.FlightView.class})
+	@JsonView({ View.ReservationView.class, View.PassengerView.class, View.FlightView.class })
 	private int age;
 
 	@Column(name = "GENDER")
-	@JsonView({View.ReservationView.class,View.PassengerView.class,View.FlightView.class})
+	@JsonView({ View.ReservationView.class, View.PassengerView.class, View.FlightView.class })
 	private String gender;
 
 	@Column(name = "PHONE", unique = true)
-	@JsonView({View.ReservationView.class,View.PassengerView.class,View.FlightView.class})
+	@JsonView({ View.ReservationView.class, View.PassengerView.class, View.FlightView.class })
 	private String phone;
 
 	// reservation made by the passenger should also be deleted.
-//	@JsonIgnore
 	@JsonView(View.PassengerView.class)
-	@OneToMany(mappedBy = "passenger", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@OneToMany(mappedBy = "passenger", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
 	private List<Reservation> reservations;
 
-//	@JsonIgnore
-	/*@ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name="PASSENGER_FLIGHT",
-    		joinColumns = {@JoinColumn(name="PASSENGER_ID", referencedColumnName ="ID" )},
-    		inverseJoinColumns = {@JoinColumn(name="FLIGHT_NUM", referencedColumnName ="FLIGHT_NUMBER")}
-            )*/
-	//@ManyToMany(mappedBy = "passengers")
-	@ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE})
-	 @JoinTable(name="PASSENGER_FLIGHT",
-			 joinColumns = {@JoinColumn(name="p_id", referencedColumnName ="p_id" )},
-     inverseJoinColumns = {@JoinColumn(name="FLIGHT_NUM", referencedColumnName ="FLIGHT_NUMBER")}
-     )
-//	@JsonView(View.ReservationView.class)
+
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@JoinTable(name = "PASSENGER_FLIGHT", joinColumns = {
+			@JoinColumn(name = "p_id", referencedColumnName = "p_id") }, inverseJoinColumns = {
+					@JoinColumn(name = "FLIGHT_NUM", referencedColumnName = "FLIGHT_NUMBER") })
 	private List<Flight> flights;
 
 	public Passenger() {
@@ -124,7 +115,8 @@ public class Passenger {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	 @XmlTransient
+
+	@XmlTransient
 	public List<Reservation> getReservations() {
 		return reservations;
 	}
@@ -132,6 +124,7 @@ public class Passenger {
 	public void setReservations(List<Reservation> reservations) {
 		this.reservations = reservations;
 	}
+
 	@XmlTransient
 	public List<Flight> getFlights() {
 		return flights;

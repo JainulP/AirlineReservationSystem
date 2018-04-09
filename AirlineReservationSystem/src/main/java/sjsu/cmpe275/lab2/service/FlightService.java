@@ -55,20 +55,20 @@ public class FlightService {
 		return flights;
 	}
 
-	public boolean isTimeOverlapping(Flight flight, String arrivalTime, String departureTime){
+	public boolean isTimeOverlapping(Flight flight, String arrivalTime, String departureTime) {
 		List<Passenger> passengers = flight.getPassengers();
 //		List<Interval> intervals = new ArrayList<>();
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh", Locale.US);
-		for(Passenger passenger : passengers){
+		for (Passenger passenger : passengers) {
 			List<Flight> bookedFlights = passenger.getFlights();
-			for(Flight bookedFlight : bookedFlights){
+			for (Flight bookedFlight : bookedFlights) {
 				try {
 					Date arrival = dateFormat.parse(bookedFlight.getArrivalTime());
 					Date departure = dateFormat.parse(bookedFlight.getDepartureTime());
-					Date min=dateFormat.parse(departureTime);
-					Date max=dateFormat.parse(arrivalTime);
-					if((arrival.compareTo(min)>=0 && arrival.compareTo(max)<=0) || (departure.compareTo(min)>=0 && departure.compareTo(max)<=0)){
+					Date min = dateFormat.parse(departureTime);
+					Date max = dateFormat.parse(arrivalTime);
+					if ((arrival.compareTo(min) >= 0 && arrival.compareTo(max) <= 0) || (departure.compareTo(min) >= 0 && departure.compareTo(max) <= 0)) {
 						//System.out.println("I am failing update flight here checkCurrentreservationFlightsTimings");
 						//List<Flight> flightList= new ArrayList<Flight>();
 						//return flight;
@@ -78,12 +78,21 @@ public class FlightService {
 //					Interval interval = new Interval(departure.getTime(),arrival.getTime());
 //					intervals.add(interval);
 				} catch (ParseException e) {
-					System.out.println("BadRequest "+"417"+" Invalid Date Format");
+					System.out.println("BadRequest " + "417" + " Invalid Date Format");
 				}
 			}
 			//intervals.sort(intervals, new IntervalStartComparator());
 		}
 		return false;
+	}
+	public boolean checkAvailability(List<Flight> flights) {
+		for (int i = 0; i < flights.size(); i++) {
+			if(flights.get(i).getSeatsLeft() < 1) {
+				return false;
+			}
+		}
+		return true;
+
 	}
 
 }

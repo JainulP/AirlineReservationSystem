@@ -29,14 +29,14 @@ public class ReservationController {
 
 	@Autowired
 	private PassengerService passengerService;
-	
+
 	@Autowired
 	private FlightService flightService;
 
 	/*
 	 * Return Reservation details in JSON format
 	 */
-    @JsonView(View.ReservationView.class)
+	@JsonView(View.ReservationView.class)
 	@RequestMapping(value = "/{number}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<?> getReservationJson(@PathVariable("number") String reservationNumber) throws JSONException {
 		Reservation reservation = reservationService.getReservation(reservationNumber);
@@ -68,16 +68,21 @@ public class ReservationController {
 	/*
 	 * Make a reservation
 	 */
-    @JsonView(View.ReservationView.class)
+	@JsonView(View.ReservationView.class)
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
-	public ResponseEntity<?> createPassenger(@RequestParam(value = "passengerId") String passengerId,
+	public ResponseEntity<?> createReservation(@RequestParam(value = "passengerId") String passengerId,
 			@RequestParam(value = "flightLists") String flightLists) {
 		Reservation reservation = new Reservation();
 		Passenger passenger = passengerService.getPassenger(passengerId);
 		reservation.setPassenger(passenger);
 		List<String> list = new ArrayList<String>(Arrays.asList(flightLists.split(",")));
 		List<Flight> flights = flightService.findAllFlights(list);
-        passenger.setFlights(flights);
+		boolean status = flightService.checkAvailability(flights);
+		if(status == false) {
+			return new ResponseEntity<>(Utils.generateErrorResponse("BadRequest", 404,
+					"Seats not available"), HttpStatus.NOT_FOUND);
+		}
+		passenger.setFlights(flights);
 		reservation.setFlights(flights);
 		Reservation reservation_res = reservationService.createReservation(reservation);
 		return new ResponseEntity<>(reservation_res, HttpStatus.CREATED);
