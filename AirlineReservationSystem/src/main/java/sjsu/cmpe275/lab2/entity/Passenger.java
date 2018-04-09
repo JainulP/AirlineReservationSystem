@@ -7,6 +7,7 @@ import sjsu.cmpe275.lab2.utils.View;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import java.util.List;
 
@@ -49,7 +50,17 @@ public class Passenger {
 	private List<Reservation> reservations;
 
 	@JsonIgnore
-	@ManyToMany(mappedBy = "passengers",cascade = CascadeType.ALL)
+	/*@ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name="PASSENGER_FLIGHT",
+    		joinColumns = {@JoinColumn(name="PASSENGER_ID", referencedColumnName ="ID" )},
+    		inverseJoinColumns = {@JoinColumn(name="FLIGHT_NUM", referencedColumnName ="FLIGHT_NUMBER")}
+            )*/
+	//@ManyToMany(mappedBy = "passengers")
+	@ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE})
+	 @JoinTable(name="PASSENGER_FLIGHT",
+			 joinColumns = {@JoinColumn(name="PASSENGER_ID", referencedColumnName ="ID" )},
+     inverseJoinColumns = {@JoinColumn(name="FLIGHT_NUM", referencedColumnName ="FLIGHT_NUMBER")}
+     )
 	private List<Flight> flights;
 
 	public Passenger() {
@@ -110,7 +121,7 @@ public class Passenger {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-
+	 //@XmlTransient
 	public List<Reservation> getReservations() {
 		return reservations;
 	}
@@ -119,11 +130,11 @@ public class Passenger {
 		this.reservations = reservations;
 	}
 
-	public List<Flight> getFlights() {
+	/*public List<Flight> getFlights() {
 		return flights;
 	}
 
 	public void setFlights(List<Flight> flights) {
 		this.flights = flights;
-	}
+	}*/
 }

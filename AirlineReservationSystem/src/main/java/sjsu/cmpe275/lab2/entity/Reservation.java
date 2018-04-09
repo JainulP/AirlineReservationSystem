@@ -30,7 +30,7 @@ public class Reservation {
     @JsonView({View.ReservationView.class,View.PassengerView.class})
     private double price;//sum of each flight's price
 
-    @ManyToMany
+    @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name="RESERVATION_FLIGHT",
     joinColumns = {@JoinColumn(name="RESERVATION_NUM",referencedColumnName = "RESERVATION_NUMBER")},
     inverseJoinColumns = {@JoinColumn(name="FLIGHT_NUM", referencedColumnName ="FLIGHT_NUMBER" )})

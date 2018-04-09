@@ -6,6 +6,8 @@ import sjsu.cmpe275.lab2.utils.View;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
 import java.util.List;
 
 @XmlRootElement
@@ -54,10 +56,11 @@ public class Flight {
     @ManyToMany(mappedBy = "flights")
     private List<Reservation> reservations;
 
-    @ManyToMany
+    @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name="PASSENGER_FLIGHT",
             joinColumns = {@JoinColumn(name="FLIGHT_NUM", referencedColumnName ="FLIGHT_NUMBER")},
             inverseJoinColumns = {@JoinColumn(name="PASSENGER_ID", referencedColumnName ="ID" )})
+   // @ManyToMany(mappedBy = "flights")
     @JsonView(View.FlightView.class)
     private List<Passenger> passengers;
 
@@ -157,7 +160,7 @@ public class Flight {
     public void setPassengers(List<Passenger> passengers) {
         this.passengers = passengers;
     }
-
+   // @XmlTransient
     public List<Reservation> getReservations() {
         return reservations;
     }
