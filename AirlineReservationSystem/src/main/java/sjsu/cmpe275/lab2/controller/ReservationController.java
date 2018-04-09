@@ -70,7 +70,7 @@ public class ReservationController {
 	 */
     @JsonView(View.ReservationView.class)
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
-	public ResponseEntity<?> createPassenger(@RequestParam(value = "passengerId") String passengerId,
+	public ResponseEntity<?> createReservation(@RequestParam(value = "passengerId") String passengerId,
 			@RequestParam(value = "flightLists") String flightLists) {
 		Reservation reservation = new Reservation();
 		Passenger passenger = passengerService.getPassenger(passengerId);
