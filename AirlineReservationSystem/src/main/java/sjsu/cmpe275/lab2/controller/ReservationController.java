@@ -17,6 +17,7 @@ import sjsu.cmpe275.lab2.entity.Reservation;
 import sjsu.cmpe275.lab2.service.FlightService;
 import sjsu.cmpe275.lab2.service.PassengerService;
 import sjsu.cmpe275.lab2.service.ReservationService;
+import sjsu.cmpe275.lab2.utils.Response;
 import sjsu.cmpe275.lab2.utils.Utils;
 import sjsu.cmpe275.lab2.utils.View;
 
@@ -78,9 +79,9 @@ public class ReservationController {
 		List<String> list = new ArrayList<String>(Arrays.asList(flightLists.split(",")));
 		List<Flight> flights = flightService.findAllFlights(list);
 		boolean status = flightService.checkAvailability(flights);
-		if(status == false) {
-			return new ResponseEntity<>(Utils.generateErrorResponse("BadRequest", 404,
-					"Seats not available"), HttpStatus.NOT_FOUND);
+		if (status == false) {
+			return new ResponseEntity<>(Utils.generateErrorResponse("BadRequest", 404, "Seats not available"),
+					HttpStatus.NOT_FOUND);
 		}
 		passenger.setFlights(flights);
 		reservation.setFlights(flights);
@@ -88,4 +89,60 @@ public class ReservationController {
 		return new ResponseEntity<>(reservation_res, HttpStatus.CREATED);
 	}
 
+	/*
+	 * Update a reservation
+	 */
+	@JsonView(View.ReservationView.class)
+	@RequestMapping(value = "/{number}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> updateReservation(@PathVariable("number") String reservationNumber,
+			@RequestParam(value = "flightsAdded") String flightsAdded,
+			@RequestParam(value = "flightsRemoved") String flightsRemoved) {
+		Reservation reservation = reservationService.getReservation(reservationNumber);
+		boolean status_add = true;
+
+		List<String> flightsAddedListNums = new ArrayList<String>(Arrays.asList(flightsAdded.split(",")));
+		List<Flight> flightsAddedList = flightService.findAllFlights(flightsAddedListNums);
+		status_add = flightService.checkAvailability(flightsAddedList);
+
+		List<String> flightsRemovedListNums = new ArrayList<String>(Arrays.asList(flightsRemoved.split(",")));
+		List<Flight> flightsRemovedList = flightService.findAllFlights(flightsRemovedListNums);
+
+		if (status_add == false) {
+			return new ResponseEntity<>(Utils.generateErrorResponse("BadRequest", 404, "Seats not available"),
+					HttpStatus.NOT_FOUND);
+		}
+
+		List<Flight> flights = reservation.getFlights();
+		for (int i = 0; i < flightsRemovedList.size(); i++) {
+			Flight flight = flightsRemovedList.get(i);
+			flights.remove(flight);
+		}
+
+		for (int i = 0; i < flightsAddedList.size(); i++) {
+			Flight flight = flightsAddedList.get(i);
+			flights.add(flight);
+		}
+
+		Passenger passenger = reservation.getPassenger();
+		passenger.setFlights(flights);
+		reservation.setFlights(flights);
+		Reservation reservation_res = reservationService.updateReservation(reservation);
+		return new ResponseEntity<>(reservation_res, HttpStatus.CREATED);
+	}
+
+	/*
+	 * Delete reservation
+	 */
+	@JsonView(View.ReservationView.class)
+	@RequestMapping(value = "/{number}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_XML_VALUE)
+	public ResponseEntity<?> deletePassenger(@PathVariable("number") String reservationNum) {
+		boolean success = reservationService.deleteReservation(reservationNum);
+		if (success) {
+			return new ResponseEntity<>(
+					new Response("Reservation with number " + reservationNum + " is canceled successfully", 200), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(Utils.generateErrorResponse("BadRequest", 404,
+					"Reservation with number " + reservationNum + " does not exist"), HttpStatus.NOT_FOUND);
+		}
+	}
 }
