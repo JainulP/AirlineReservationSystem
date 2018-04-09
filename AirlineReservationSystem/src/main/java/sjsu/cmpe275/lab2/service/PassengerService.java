@@ -36,7 +36,7 @@ public class PassengerService {
 	 * @return the passenger
 	 */
 	public Passenger updatePassenger(Passenger passenger) {
-		Passenger passenger_temp = passengerRepository.findById(passenger.getId()).get();
+		Passenger passenger_temp = passengerRepository.findById(passenger.getP_id()).get();
 		passenger_temp.setFirstname(passenger.getFirstname());
 		passenger_temp.setLastname(passenger.getLastname());
 		passenger_temp.setGender(passenger.getGender());

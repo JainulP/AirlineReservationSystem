@@ -1,7 +1,9 @@
 package sjsu.cmpe275.lab2.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import sjsu.cmpe275.lab2.utils.View;
 
 import javax.persistence.*;
@@ -52,14 +54,19 @@ public class Flight {
     @JsonView({View.ReservationView.class,View.PassengerView.class,View.FlightView.class})
     private Plane plane;  // Embedded
 
-    @JsonIgnore
-    @ManyToMany(mappedBy = "flights")
+   @JsonIgnore
+    //@ManyToMany(mappedBy = "flights")
+    @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name="RESERVATION_FLIGHT",
+            joinColumns = {@JoinColumn(name="FLIGHT_NUM", referencedColumnName ="FLIGHT_NUMBER" )},
+            inverseJoinColumns = {@JoinColumn(name="RESERVATION_NUM",referencedColumnName = "RESERVATION_NUMBER")})
+    //@JsonView({View.ReservationView.class,View.PassengerView.class})
     private List<Reservation> reservations;
 
     @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name="PASSENGER_FLIGHT",
             joinColumns = {@JoinColumn(name="FLIGHT_NUM", referencedColumnName ="FLIGHT_NUMBER")},
-            inverseJoinColumns = {@JoinColumn(name="PASSENGER_ID", referencedColumnName ="ID" )})
+            inverseJoinColumns = {@JoinColumn(name="p_id", referencedColumnName ="p_id" )})
    // @ManyToMany(mappedBy = "flights")
     @JsonView(View.FlightView.class)
     private List<Passenger> passengers;
@@ -152,7 +159,7 @@ public class Flight {
         this.plane = plane;
     }
 
-//    @JsonIgnore
+//   @JsonIgnore
     public List<Passenger> getPassengers() {
         return passengers;
     }
@@ -160,7 +167,7 @@ public class Flight {
     public void setPassengers(List<Passenger> passengers) {
         this.passengers = passengers;
     }
-   // @XmlTransient
+   @XmlTransient
     public List<Reservation> getReservations() {
         return reservations;
     }

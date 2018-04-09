@@ -1,6 +1,8 @@
 package sjsu.cmpe275.lab2.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.GenericGenerator;
 import sjsu.cmpe275.lab2.utils.View;
 
@@ -21,8 +23,8 @@ public class Reservation {
     @JsonView({View.ReservationView.class,View.PassengerView.class})
     private String reservationNumber;
 
-    @ManyToOne
-    @JoinColumn(name="PASSENGER_ID")
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name="p_id")
     @JsonView({View.ReservationView.class})
     private Passenger passenger;
 
@@ -34,7 +36,7 @@ public class Reservation {
     @JoinTable(name="RESERVATION_FLIGHT",
     joinColumns = {@JoinColumn(name="RESERVATION_NUM",referencedColumnName = "RESERVATION_NUMBER")},
     inverseJoinColumns = {@JoinColumn(name="FLIGHT_NUM", referencedColumnName ="FLIGHT_NUMBER" )})
-    @JsonView({View.ReservationView.class,View.PassengerView.class})
+    @JsonView({View.ReservationView.class})
     private List<Flight> flights;
 
     public String getReservationNumber() {

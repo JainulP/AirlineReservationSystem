@@ -1,7 +1,9 @@
 package sjsu.cmpe275.lab2.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.GenericGenerator;
 import sjsu.cmpe275.lab2.utils.View;
 
@@ -19,9 +21,9 @@ public class Passenger {
 	@Id
 	@GeneratedValue(generator = "uuid")
 	@GenericGenerator(name = "uuid", strategy = "uuid2")
-	@Column(name = "ID")
+	@Column(name = "p_id")
 	@JsonView({View.ReservationView.class,View.PassengerView.class,View.FlightView.class})
-	private String id;
+	private String p_id;
 
 	@Column(name = "FIRST_NAME")
 	@JsonView({View.ReservationView.class,View.PassengerView.class,View.FlightView.class})
@@ -46,10 +48,10 @@ public class Passenger {
 	// reservation made by the passenger should also be deleted.
 //	@JsonIgnore
 	@JsonView(View.PassengerView.class)
-	@OneToMany(mappedBy = "passenger", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "passenger", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private List<Reservation> reservations;
 
-	@JsonIgnore
+//	@JsonIgnore
 	/*@ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name="PASSENGER_FLIGHT",
     		joinColumns = {@JoinColumn(name="PASSENGER_ID", referencedColumnName ="ID" )},
@@ -58,9 +60,10 @@ public class Passenger {
 	//@ManyToMany(mappedBy = "passengers")
 	@ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE})
 	 @JoinTable(name="PASSENGER_FLIGHT",
-			 joinColumns = {@JoinColumn(name="PASSENGER_ID", referencedColumnName ="ID" )},
+			 joinColumns = {@JoinColumn(name="p_id", referencedColumnName ="p_id" )},
      inverseJoinColumns = {@JoinColumn(name="FLIGHT_NUM", referencedColumnName ="FLIGHT_NUMBER")}
      )
+	@JsonView(View.ReservationView.class)
 	private List<Flight> flights;
 
 	public Passenger() {
@@ -74,12 +77,12 @@ public class Passenger {
 		this.phone = phone;
 	}
 
-	public String getId() {
-		return id;
+	public String getP_id() {
+		return p_id;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setP_id(String p_id) {
+		this.p_id = p_id;
 	}
 
 	public String getFirstname() {
@@ -121,7 +124,7 @@ public class Passenger {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	 //@XmlTransient
+	 @XmlTransient
 	public List<Reservation> getReservations() {
 		return reservations;
 	}
@@ -129,12 +132,12 @@ public class Passenger {
 	public void setReservations(List<Reservation> reservations) {
 		this.reservations = reservations;
 	}
-
-	/*public List<Flight> getFlights() {
+	@XmlTransient
+	public List<Flight> getFlights() {
 		return flights;
 	}
 
 	public void setFlights(List<Flight> flights) {
 		this.flights = flights;
-	}*/
+	}
 }

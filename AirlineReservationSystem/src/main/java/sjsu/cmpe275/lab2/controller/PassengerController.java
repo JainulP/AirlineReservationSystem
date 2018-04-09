@@ -67,7 +67,7 @@ public class PassengerController {
 			@RequestParam(value = "age") int age, @RequestParam(value = "gender") String gender,
 			@RequestParam(value = "phone") String phone) {
 		Passenger passenger = new Passenger(firstname, lastname, age, gender, phone);
-		passenger.setId(passengerId);
+		passenger.setP_id(passengerId);
 		Passenger passenger_res = passengerService.updatePassenger(passenger);
 		return new ResponseEntity<>(passenger_res, HttpStatus.OK);
 	}

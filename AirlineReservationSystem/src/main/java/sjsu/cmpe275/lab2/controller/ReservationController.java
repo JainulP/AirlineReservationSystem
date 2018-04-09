@@ -77,6 +77,7 @@ public class ReservationController {
 		reservation.setPassenger(passenger);
 		List<String> list = new ArrayList<String>(Arrays.asList(flightLists.split(",")));
 		List<Flight> flights = flightService.findAllFlights(list);
+        passenger.setFlights(flights);
 		reservation.setFlights(flights);
 		Reservation reservation_res = reservationService.createReservation(reservation);
 		return new ResponseEntity<>(reservation_res, HttpStatus.CREATED);
