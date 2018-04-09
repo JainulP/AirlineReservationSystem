@@ -63,7 +63,7 @@ public class Passenger {
 			 joinColumns = {@JoinColumn(name="p_id", referencedColumnName ="p_id" )},
      inverseJoinColumns = {@JoinColumn(name="FLIGHT_NUM", referencedColumnName ="FLIGHT_NUMBER")}
      )
-	@JsonView(View.ReservationView.class)
+	//@JsonView(View.ReservationView.class)
 	private List<Flight> flights;
 
 	public Passenger() {
