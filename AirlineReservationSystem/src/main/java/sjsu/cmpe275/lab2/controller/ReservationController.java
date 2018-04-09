@@ -112,7 +112,8 @@ public class ReservationController {
 					HttpStatus.NOT_FOUND);
 		}
 
-		List<Flight> flights = reservation.getFlights();
+		List<Flight> flights = new ArrayList<Flight>();
+		flights = reservation.getFlights();
 		for (int i = 0; i < flightsRemovedList.size(); i++) {
 			Flight flight = flightsRemovedList.get(i);
 			flights.remove(flight);
@@ -125,7 +126,6 @@ public class ReservationController {
 
 		Passenger passenger = reservation.getPassenger();
 		passenger.setFlights(flights);
-		reservation.setFlights(flights);
 		Reservation reservation_res = reservationService.updateReservation(reservation);
 		return new ResponseEntity<>(reservation_res, HttpStatus.CREATED);
 	}
@@ -139,7 +139,8 @@ public class ReservationController {
 		boolean success = reservationService.deleteReservation(reservationNum);
 		if (success) {
 			return new ResponseEntity<>(
-					new Response("Reservation with number " + reservationNum + " is canceled successfully", 200), HttpStatus.OK);
+					new Response("Reservation with number " + reservationNum + " is canceled successfully", 200),
+					HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(Utils.generateErrorResponse("BadRequest", 404,
 					"Reservation with number " + reservationNum + " does not exist"), HttpStatus.NOT_FOUND);

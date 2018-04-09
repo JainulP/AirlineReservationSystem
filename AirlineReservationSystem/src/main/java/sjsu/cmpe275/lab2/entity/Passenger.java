@@ -11,6 +11,7 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @XmlRootElement
@@ -131,6 +132,6 @@ public class Passenger {
 	}
 
 	public void setFlights(List<Flight> flights) {
-		this.flights = flights;
+		this.flights = new ArrayList<Flight>(flights);
 	}
 }

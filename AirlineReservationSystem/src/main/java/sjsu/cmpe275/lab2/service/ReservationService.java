@@ -55,13 +55,11 @@ public class ReservationService {
 
 	public boolean deleteReservation(String reservationNum) {
 		boolean doesExists = reservationRepository.existsById(reservationNum);
-
 		if (doesExists) {
 			Reservation reservation = reservationRepository.findById(reservationNum).get();
 			Passenger passenger = reservation.getPassenger();
 			passenger.setFlights(null);
 			reservationRepository.save(reservation);
-			//reservation.setFlights(flights);
 			reservationRepository.deleteById(reservationNum);
 			return true;
 		} else {
