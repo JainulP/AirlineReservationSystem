@@ -49,4 +49,13 @@ public class FlightService {
 		return flights;
 	}
 
+	public boolean checkAvailability(List<Flight> flights) {
+		for (int i = 0; i < flights.size(); i++) {
+			if(flights.get(i).getSeatsLeft() < 1) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 }
