@@ -1,9 +1,6 @@
 package sjsu.cmpe275.lab2.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import sjsu.cmpe275.lab2.utils.View;
 
 import javax.persistence.*;
@@ -19,6 +16,7 @@ public class Flight {
 
     @Id
     @Column(name = "FLIGHT_NUMBER",unique = true)
+    @JsonProperty(value ="flightNumber" )
     @JsonView({View.ReservationView.class,View.PassengerView.class,View.FlightView.class})
     private String flightNumber;
 
@@ -160,10 +158,12 @@ public class Flight {
     }
 
 //   @JsonIgnore
+    @JsonView(View.FlightView.class)
     public List<Passenger> getPassengers() {
         return passengers;
     }
 
+    @JsonView(View.FlightView.class)
     public void setPassengers(List<Passenger> passengers) {
         this.passengers = passengers;
     }

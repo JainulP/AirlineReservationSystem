@@ -1,6 +1,7 @@
 package sjsu.cmpe275.lab2.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.GenericGenerator;
@@ -36,7 +37,7 @@ public class Reservation {
     @JoinTable(name="RESERVATION_FLIGHT",
     joinColumns = {@JoinColumn(name="RESERVATION_NUM",referencedColumnName = "RESERVATION_NUMBER")},
     inverseJoinColumns = {@JoinColumn(name="FLIGHT_NUM", referencedColumnName ="FLIGHT_NUMBER" )})
-    @JsonView({View.ReservationView.class})
+    @JsonView({View.ReservationView.class,View.PassengerView.class})
     private List<Flight> flights;
 
     public String getReservationNumber() {

@@ -1,12 +1,18 @@
 package sjsu.cmpe275.lab2.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import sjsu.cmpe275.lab2.entity.Flight;
+import sjsu.cmpe275.lab2.entity.Passenger;
 import sjsu.cmpe275.lab2.repository.FlightRepository;
+import sjsu.cmpe275.lab2.utils.Utils;
+import sun.jvm.hotspot.utilities.Interval;
 
-import java.util.List;
-import java.util.Optional;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class FlightService {
@@ -47,6 +53,37 @@ public class FlightService {
 	public List<Flight> findAllFlights(List<String> flightnumbers) {
 		List<Flight> flights = (List<Flight>) flightRepository.findAllById(flightnumbers);
 		return flights;
+	}
+
+	public boolean isTimeOverlapping(Flight flight, String arrivalTime, String departureTime){
+		List<Passenger> passengers = flight.getPassengers();
+//		List<Interval> intervals = new ArrayList<>();
+
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh", Locale.US);
+		for(Passenger passenger : passengers){
+			List<Flight> bookedFlights = passenger.getFlights();
+			for(Flight bookedFlight : bookedFlights){
+				try {
+					Date arrival = dateFormat.parse(bookedFlight.getArrivalTime());
+					Date departure = dateFormat.parse(bookedFlight.getDepartureTime());
+					Date min=dateFormat.parse(departureTime);
+					Date max=dateFormat.parse(arrivalTime);
+					if((arrival.compareTo(min)>=0 && arrival.compareTo(max)<=0) || (departure.compareTo(min)>=0 && departure.compareTo(max)<=0)){
+						//System.out.println("I am failing update flight here checkCurrentreservationFlightsTimings");
+						//List<Flight> flightList= new ArrayList<Flight>();
+						//return flight;
+						return true;
+					}
+
+//					Interval interval = new Interval(departure.getTime(),arrival.getTime());
+//					intervals.add(interval);
+				} catch (ParseException e) {
+					System.out.println("BadRequest "+"417"+" Invalid Date Format");
+				}
+			}
+			//intervals.sort(intervals, new IntervalStartComparator());
+		}
+		return false;
 	}
 
 }
