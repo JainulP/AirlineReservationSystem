@@ -66,4 +66,9 @@ public class ReservationService {
 			return false;
 		}
 	}
+
+	public List<Reservation> searchReservation(String passengerId, String origin, String to, String flightNumber) {
+
+		return null;
+	}
 }

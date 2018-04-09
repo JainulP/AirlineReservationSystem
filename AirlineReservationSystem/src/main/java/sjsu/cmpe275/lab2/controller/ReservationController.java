@@ -146,4 +146,22 @@ public class ReservationController {
 					"Reservation with number " + reservationNum + " does not exist"), HttpStatus.NOT_FOUND);
 		}
 	}
+
+	/*
+	 * Search Reservation details in XML format
+	 */
+	@JsonView(View.ReservationView.class)
+	@RequestMapping(method = RequestMethod.GET, produces = { MediaType.APPLICATION_XML_VALUE })
+	public ResponseEntity<?> searchReservationXml(@RequestParam(value = "passengerId") String passengerId,
+			@RequestParam(value = "origin") String origin, @RequestParam(value = "to") String to,
+			@RequestParam(value = "flightNumber") String flightNumber) {
+		List<Reservation> reservations = reservationService.searchReservation(passengerId, origin, to, flightNumber);
+		if (reservations.size() == 0)
+			return new ResponseEntity<>(Utils.generateErrorResponse("BadRequest", 404,
+					"Reservations with the specified criteria does not exist"), HttpStatus.NOT_FOUND);
+		else
+			return new ResponseEntity<>(reservations, HttpStatus.OK);
+
+	}
+
 }
