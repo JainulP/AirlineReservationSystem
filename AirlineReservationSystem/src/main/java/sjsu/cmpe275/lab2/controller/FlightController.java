@@ -15,6 +15,10 @@ import sjsu.cmpe275.lab2.utils.Response;
 import sjsu.cmpe275.lab2.utils.Utils;
 import sjsu.cmpe275.lab2.utils.View;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 @RestController
 public class FlightController {
 
@@ -69,14 +73,31 @@ public class FlightController {
         if (arrivalTime.equals(departureTime)) {
             return new ResponseEntity<>(Utils.generateErrorResponse("BadRequest", 400, "Arrival and Departure Time can't be same!"), HttpStatus.BAD_REQUEST);
         }
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd-HH");
+        try {
+            Date arrival = simpleDateFormat.parse(arrivalTime);
+            Date departure = simpleDateFormat.parse(departureTime);
+            if(departure.compareTo(arrival)>0){
+                return  new ResponseEntity<>(Utils.generateErrorResponse("BadRequest", 400,
+                        "Sorry, the arrival time cannot be earlier than the departure time"),
+                        HttpStatus.BAD_GATEWAY);
+            }
+        } catch (ParseException e) {
+            return  new ResponseEntity<>(Utils.generateErrorResponse("BadRequest", 400,
+                    "Invalid Date Format! Please enter date in \"yyyy-MM-dd-HH\" format"),
+                    HttpStatus.BAD_GATEWAY);
+        }
         Flight flight = flightService.getFlight(flightNumber);
         if(flight == null){
            return new ResponseEntity<>(flightService.createOrUpdate(new Flight(flightNumber,price,origin,destinationTo,departureTime,arrivalTime,description,new Plane(capacity,model,manufacturer,year))),HttpStatus.OK);
         }
         else{
-            if (flight.getPlane().getCapacity() < flight.getPassengers().size()) {
+            if (capacity < flight.getPassengers().size()) {
                 return new ResponseEntity<>(Utils.generateErrorResponse("BadRequest", 400, "New capacity can't be less than " +
                         "the reservations for that flight!"), HttpStatus.BAD_REQUEST);
+            }
+            if(flightService.isTimeOverlapping(flight,arrivalTime,departureTime)){
+                return new ResponseEntity<>(Utils.generateErrorResponse("BadRequest",400,"This update cannot proceed as it causes time overlapping for passenger."),HttpStatus.BAD_REQUEST);
             }
             else {
                 return new ResponseEntity<>(flightService.createOrUpdate(new Flight(flightNumber, price, origin, destinationTo, departureTime, arrivalTime, description, new Plane(capacity, model, manufacturer, year))), HttpStatus.OK);
@@ -99,9 +120,6 @@ public class FlightController {
             }
             else{
                 flightService.deleteFlight(flightNumber);
-//                JSONObject response = new JSONObject();
-//                response.put("code",200);
-//                response.put("msg","Flight with number " + flightNumber + " is deleted successfully");
                 return new ResponseEntity<>(new Response("Flight with number " + flightNumber + " is deleted successfully",200), HttpStatus.OK);
 
             }

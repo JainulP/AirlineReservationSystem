@@ -50,6 +50,7 @@ public class Passenger {
 	@OneToMany(mappedBy = "passenger", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
 	private List<Reservation> reservations;
 
+
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "PASSENGER_FLIGHT", joinColumns = {
 			@JoinColumn(name = "p_id", referencedColumnName = "p_id") }, inverseJoinColumns = {
