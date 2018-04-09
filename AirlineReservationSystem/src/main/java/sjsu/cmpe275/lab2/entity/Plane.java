@@ -1,23 +1,28 @@
 package sjsu.cmpe275.lab2.entity;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import sjsu.cmpe275.lab2.utils.View;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 
 @Embeddable
 public class Plane {
 
     @Column(name="CAPACITY")
+    @JsonView({View.ReservationView.class,View.PassengerView.class,View.FlightView.class})
     private int capacity;
 
     @Column(name="MODEL")
+    @JsonView({View.ReservationView.class,View.PassengerView.class,View.FlightView.class})
     private String model;
 
     @Column(name="MANUFACTURER")
+    @JsonView({View.ReservationView.class,View.PassengerView.class,View.FlightView.class})
     private String manufacturer;
 
     @Column(name="YEAR")
+    @JsonView({View.ReservationView.class,View.PassengerView.class,View.FlightView.class})
     private int year;
 
     public Plane() {

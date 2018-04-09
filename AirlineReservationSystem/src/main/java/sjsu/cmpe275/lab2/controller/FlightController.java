@@ -1,5 +1,6 @@
 package sjsu.cmpe275.lab2.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +9,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sjsu.cmpe275.lab2.entity.Flight;
-import sjsu.cmpe275.lab2.entity.Passenger;
 import sjsu.cmpe275.lab2.entity.Plane;
 import sjsu.cmpe275.lab2.service.FlightService;
+import sjsu.cmpe275.lab2.utils.Response;
 import sjsu.cmpe275.lab2.utils.Utils;
+import sjsu.cmpe275.lab2.utils.View;
 
 @RestController
 public class FlightController {
@@ -22,6 +24,7 @@ public class FlightController {
     /*
 	 * Return flight details in JSON format
 	 */
+    @JsonView(View.FlightView.class)
     @RequestMapping(value = "/flight/{flightNumber}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> getFlightJson(@PathVariable("flightNumber") String flightNumber) throws JSONException {
         Flight flight = flightService.getFlight(flightNumber);
@@ -35,6 +38,7 @@ public class FlightController {
     /*
 	 * Return flight details in XML format
 	 */
+    @JsonView(View.FlightView.class)
     @RequestMapping(value = "/flight/{flightNumber}", params = {"xml"}, method = RequestMethod.GET, produces = {MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<?> getFlightXml(@PathVariable("flightNumber") String flightNumber, @RequestParam(value = "xml") String isXml) throws JSONException {
         Flight flight = flightService.getFlight(flightNumber);
@@ -45,6 +49,7 @@ public class FlightController {
 
     }
 
+    @JsonView(View.FlightView.class)
     @RequestMapping(value = "/flight/{flightNumber}", method = RequestMethod.POST, produces = {MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<?> createOrUpdateFlight(@PathVariable("flightNumber") String flightNumber,
                                                   @RequestParam(value = "price") double price,
@@ -79,6 +84,7 @@ public class FlightController {
         }
     }
 
+    @JsonView(View.FlightView.class)
     @RequestMapping(value = "/airline/{flightNumber}", method = RequestMethod.DELETE, produces = {MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<?> deleteFlight(@PathVariable(value="flightNumber") String flightNumber) throws JSONException {
         Flight flight = flightService.getFlight(flightNumber);
@@ -93,10 +99,10 @@ public class FlightController {
             }
             else{
                 flightService.deleteFlight(flightNumber);
-                JSONObject response = new JSONObject();
-                response.put("code",200);
-                response.put("msg","Flight with number " + flightNumber + " is deleted successfully");
-                return new ResponseEntity<>(response, HttpStatus.OK);
+//                JSONObject response = new JSONObject();
+//                response.put("code",200);
+//                response.put("msg","Flight with number " + flightNumber + " is deleted successfully");
+                return new ResponseEntity<>(new Response("Flight with number " + flightNumber + " is deleted successfully",200), HttpStatus.OK);
 
             }
         }

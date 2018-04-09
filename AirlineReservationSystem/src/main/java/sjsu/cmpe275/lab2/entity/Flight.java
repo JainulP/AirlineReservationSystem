@@ -1,12 +1,11 @@
 package sjsu.cmpe275.lab2.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.GenericGenerator;
-import org.springframework.http.ResponseEntity;
+import com.fasterxml.jackson.annotation.JsonView;
+import sjsu.cmpe275.lab2.utils.View;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.Date;
 import java.util.List;
 
 @XmlRootElement
@@ -16,30 +15,39 @@ public class Flight {
 
     @Id
     @Column(name = "FLIGHT_NUMBER",unique = true)
+    @JsonView({View.ReservationView.class,View.PassengerView.class,View.FlightView.class})
     private String flightNumber;
 
     @Column(name="PRICE")
+    @JsonView({View.ReservationView.class,View.PassengerView.class,View.FlightView.class})
     private double price;
 
     @Column(name="ORIGIN")
+    @JsonView({View.ReservationView.class,View.PassengerView.class,View.FlightView.class})
     private String origin;
 
     @Column(name="DESTINATION_TO")
+    @JsonView({View.ReservationView.class,View.PassengerView.class,View.FlightView.class})
     private String destinationTo;
 
     @Column(name="DEPARTURE_TIME")
+    @JsonView({View.ReservationView.class,View.PassengerView.class,View.FlightView.class})
     private String departureTime;
 
     @Column(name="ARRIVAL_TIME")
+    @JsonView({View.ReservationView.class,View.PassengerView.class,View.FlightView.class})
     private String arrivalTime;
 
     @Column(name="SEATS_LEFT")
+    @JsonView({View.ReservationView.class,View.PassengerView.class,View.FlightView.class})
     private int seatsLeft;
 
     @Column(name="DESCRIPTION")
+    @JsonView({View.ReservationView.class,View.PassengerView.class,View.FlightView.class})
     private String description;
 
     @Embedded
+    @JsonView({View.ReservationView.class,View.PassengerView.class,View.FlightView.class})
     private Plane plane;  // Embedded
 
     @JsonIgnore
@@ -50,6 +58,7 @@ public class Flight {
     @JoinTable(name="PASSENGER_FLIGHT",
             joinColumns = {@JoinColumn(name="FLIGHT_NUM", referencedColumnName ="FLIGHT_NUMBER")},
             inverseJoinColumns = {@JoinColumn(name="PASSENGER_ID", referencedColumnName ="ID" )})
+    @JsonView(View.FlightView.class)
     private List<Passenger> passengers;
 
     public Flight() {
@@ -140,6 +149,7 @@ public class Flight {
         this.plane = plane;
     }
 
+//    @JsonIgnore
     public List<Passenger> getPassengers() {
         return passengers;
     }
@@ -148,11 +158,11 @@ public class Flight {
         this.passengers = passengers;
     }
 
-//    public List<Reservation> getReservations() {
-//        return reservations;
-//    }
-//
-//    public void setReservations(List<Reservation> reservations) {
-//        this.reservations = reservations;
-//    }
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
 }

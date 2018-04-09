@@ -1,5 +1,6 @@
 package sjsu.cmpe275.lab2.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,6 +15,7 @@ import sjsu.cmpe275.lab2.entity.Passenger;
 import sjsu.cmpe275.lab2.service.PassengerService;
 import sjsu.cmpe275.lab2.utils.Response;
 import sjsu.cmpe275.lab2.utils.Utils;
+import sjsu.cmpe275.lab2.utils.View;
 
 @RestController
 @RequestMapping("/passenger")
@@ -24,6 +26,7 @@ public class PassengerController {
 	/*
 	 * Return passenger details in JSON format
 	 */
+	@JsonView(View.PassengerView.class)
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getPassengerJson(@PathVariable("id") String passengerId) {
 		Passenger passenger = passengerService.getPassenger(passengerId);
@@ -33,8 +36,8 @@ public class PassengerController {
 	/*
 	 * Return passenger details in XML format
 	 */
-	@RequestMapping(value = "/{id}", params = {
-			"xml" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
+	@JsonView(View.PassengerView.class)
+	@RequestMapping(value = "/{id}", params = {"xml" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
 	public ResponseEntity<?> getPassengerXml(@PathVariable("id") String passengerId,
 			@RequestParam(value = "xml") String isXml) {
 		Passenger passenger = passengerService.getPassenger(passengerId);
@@ -44,6 +47,7 @@ public class PassengerController {
 	/*
 	 * Create passenger from the details provided
 	 */
+	@JsonView(View.PassengerView.class)
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> createPassenger(@RequestParam(value = "firstname") String firstname,
 			@RequestParam(value = "lastname") String lastname, @RequestParam(value = "age") int age,
@@ -56,6 +60,7 @@ public class PassengerController {
 	/*
 	 * Update passenger from the details provided
 	 */
+	@JsonView(View.PassengerView.class)
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> updatePassenger(@PathVariable("id") String passengerId,
 			@RequestParam(value = "firstname") String firstname, @RequestParam(value = "lastname") String lastname,
@@ -70,6 +75,7 @@ public class PassengerController {
 	/*
 	 * Delete passenger with the id specified
 	 */
+	@JsonView(View.PassengerView.class)
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_XML_VALUE)
 	public ResponseEntity<?> deletePassenger(@PathVariable("id") String passengerId) {
 		boolean success = passengerService.deletePassenger(passengerId);

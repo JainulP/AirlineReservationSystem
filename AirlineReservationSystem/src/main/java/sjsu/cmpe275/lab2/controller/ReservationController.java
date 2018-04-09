@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,11 +14,11 @@ import org.springframework.web.bind.annotation.*;
 import sjsu.cmpe275.lab2.entity.Flight;
 import sjsu.cmpe275.lab2.entity.Passenger;
 import sjsu.cmpe275.lab2.entity.Reservation;
-import sjsu.cmpe275.lab2.repository.FlightRepository;
 import sjsu.cmpe275.lab2.service.FlightService;
 import sjsu.cmpe275.lab2.service.PassengerService;
 import sjsu.cmpe275.lab2.service.ReservationService;
 import sjsu.cmpe275.lab2.utils.Utils;
+import sjsu.cmpe275.lab2.utils.View;
 
 @RestController
 @RequestMapping("/reservation")
@@ -35,6 +36,7 @@ public class ReservationController {
 	/*
 	 * Return Reservation details in JSON format
 	 */
+    @JsonView(View.ReservationView.class)
 	@RequestMapping(value = "/{number}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<?> getReservationJson(@PathVariable("number") String reservationNumber) throws JSONException {
 		Reservation reservation = reservationService.getReservation(reservationNumber);
@@ -49,6 +51,7 @@ public class ReservationController {
 	/*
 	 * Return Reservation details in XML format
 	 */
+	@JsonView(View.ReservationView.class)
 	@RequestMapping(value = "/{number}", params = { "xml" }, method = RequestMethod.GET, produces = {
 			MediaType.APPLICATION_XML_VALUE })
 	public ResponseEntity<?> getReservationXml(@PathVariable("number") String reservationNumber,
@@ -65,6 +68,7 @@ public class ReservationController {
 	/*
 	 * Make a reservation
 	 */
+    @JsonView(View.ReservationView.class)
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
 	public ResponseEntity<?> createPassenger(@RequestParam(value = "passengerId") String passengerId,
 			@RequestParam(value = "flightLists") String flightLists) {

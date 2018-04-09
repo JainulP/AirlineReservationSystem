@@ -1,7 +1,9 @@
 package sjsu.cmpe275.lab2.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.annotations.GenericGenerator;
+import sjsu.cmpe275.lab2.utils.View;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -17,24 +19,32 @@ public class Passenger {
 	@GeneratedValue(generator = "uuid")
 	@GenericGenerator(name = "uuid", strategy = "uuid2")
 	@Column(name = "ID")
+	@JsonView({View.ReservationView.class,View.PassengerView.class,View.FlightView.class})
 	private String id;
 
 	@Column(name = "FIRST_NAME")
+	@JsonView({View.ReservationView.class,View.PassengerView.class,View.FlightView.class})
 	private String firstname;
 
 	@Column(name = "LAST_NAME")
+	@JsonView({View.ReservationView.class,View.PassengerView.class,View.FlightView.class})
 	private String lastname;
 
 	@Column(name = "AGE")
+	@JsonView({View.ReservationView.class,View.PassengerView.class,View.FlightView.class})
 	private int age;
 
 	@Column(name = "GENDER")
+	@JsonView({View.ReservationView.class,View.PassengerView.class,View.FlightView.class})
 	private String gender;
 
 	@Column(name = "PHONE", unique = true)
+	@JsonView({View.ReservationView.class,View.PassengerView.class,View.FlightView.class})
 	private String phone;
 
 	// reservation made by the passenger should also be deleted.
+//	@JsonIgnore
+	@JsonView(View.PassengerView.class)
 	@OneToMany(mappedBy = "passenger", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Reservation> reservations;
 

@@ -1,7 +1,8 @@
 package sjsu.cmpe275.lab2.entity;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.jpa.repository.Query;
+import sjsu.cmpe275.lab2.utils.View;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -17,19 +18,23 @@ public class Reservation {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(name = "RESERVATION_NUMBER")
+    @JsonView({View.ReservationView.class,View.PassengerView.class})
     private String reservationNumber;
 
     @ManyToOne
     @JoinColumn(name="PASSENGER_ID")
+    @JsonView({View.ReservationView.class})
     private Passenger passenger;
 
     @Column(name="PRICE")
+    @JsonView({View.ReservationView.class,View.PassengerView.class})
     private double price;//sum of each flight's price
 
     @ManyToMany
     @JoinTable(name="RESERVATION_FLIGHT",
     joinColumns = {@JoinColumn(name="RESERVATION_NUM",referencedColumnName = "RESERVATION_NUMBER")},
     inverseJoinColumns = {@JoinColumn(name="FLIGHT_NUM", referencedColumnName ="FLIGHT_NUMBER" )})
+    @JsonView({View.ReservationView.class,View.PassengerView.class})
     private List<Flight> flights;
 
     public String getReservationNumber() {
