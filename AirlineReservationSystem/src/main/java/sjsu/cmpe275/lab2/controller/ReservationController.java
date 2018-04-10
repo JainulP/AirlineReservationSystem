@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import sjsu.cmpe275.lab2.dto.Reservation;
-import sjsu.cmpe275.lab2.entity.Flight;
+import sjsu.cmpe275.lab2.entity.FlightEntity;
 import sjsu.cmpe275.lab2.entity.PassengerEntity;
 import sjsu.cmpe275.lab2.entity.ReservationEntity;
 import sjsu.cmpe275.lab2.entity.Reservations;
@@ -88,7 +88,7 @@ public class ReservationController {
 		PassengerEntity passenger = passengerService.getPassenger(passengerId);
 		reservation.setPassenger(passenger);
 		List<String> list = new ArrayList<String>(Arrays.asList(flightLists.split(",")));
-		List<Flight> flights = flightService.findAllFlights(list);
+		List<FlightEntity> flights = flightService.findAllFlights(list);
 		boolean statusAvailability = flightService.checkAvailability(flights);
 		if (statusAvailability == false) {
 			return new ResponseEntity<>(Utils.generateErrorResponse("BadRequest", 404, "Seats not available"),
@@ -121,26 +121,26 @@ public class ReservationController {
 		boolean status_add = true;
 
 		List<String> flightsAddedListNums = new ArrayList<String>(Arrays.asList(flightsAdded.split(",")));
-		List<Flight> flightsAddedList = flightService.findAllFlights(flightsAddedListNums);
+		List<FlightEntity> flightsAddedList = flightService.findAllFlights(flightsAddedListNums);
 		status_add = flightService.checkAvailability(flightsAddedList);
 
 		List<String> flightsRemovedListNums = new ArrayList<String>(Arrays.asList(flightsRemoved.split(",")));
-		List<Flight> flightsRemovedList = flightService.findAllFlights(flightsRemovedListNums);
+		List<FlightEntity> flightsRemovedList = flightService.findAllFlights(flightsRemovedListNums);
 
 		if (status_add == false) {
 			return new ResponseEntity<>(Utils.generateErrorResponse("BadRequest", 404, "Seats not available"),
 					HttpStatus.NOT_FOUND);
 		}
 
-		List<Flight> flights = new ArrayList<Flight>();
+		List<FlightEntity> flights = new ArrayList<FlightEntity>();
 		flights = reservation.getFlights();
 		for (int i = 0; i < flightsRemovedList.size(); i++) {
-			Flight flight = flightsRemovedList.get(i);
+			FlightEntity flight = flightsRemovedList.get(i);
 			flights.remove(flight);
 		}
 
 		for (int i = 0; i < flightsAddedList.size(); i++) {
-			Flight flight = flightsAddedList.get(i);
+			FlightEntity flight = flightsAddedList.get(i);
 			flights.add(flight);
 		}
 

@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import sjsu.cmpe275.lab2.entity.Flight;
+import sjsu.cmpe275.lab2.entity.FlightEntity;
 import sjsu.cmpe275.lab2.entity.PassengerEntity;
 import sjsu.cmpe275.lab2.repository.FlightRepository;
 import sjsu.cmpe275.lab2.repository.PassengerRepository;
@@ -63,7 +63,7 @@ public class PassengerService {
 	public boolean deletePassenger(String passengerId) {
 		// increase the seats in flights
 		PassengerEntity passenger = passengerRepository.findById(passengerId).get();
-		List<Flight> flights = passenger.getFlights();
+		List<FlightEntity> flights = passenger.getFlights();
 		increaseSeats(flights);
 		boolean doesExists = passengerRepository.existsById(passengerId);
 		if (doesExists) {
@@ -74,19 +74,19 @@ public class PassengerService {
 		}
 	}
 
-	public List<Flight> decreaseSeats(List<Flight> flights) {
+	public List<FlightEntity> decreaseSeats(List<FlightEntity> flights) {
 		for (int i = 0; i < flights.size(); i++) {
 			int count = flights.get(i).getSeatsLeft() - 1;
 			flights.get(i).setSeatsLeft(count);
 		}
-		return (List<Flight>) flightRepository.saveAll(flights);
+		return (List<FlightEntity>) flightRepository.saveAll(flights);
 	}
 	
-	public List<Flight> increaseSeats(List<Flight> flights) {
+	public List<FlightEntity> increaseSeats(List<FlightEntity> flights) {
 		for (int i = 0; i < flights.size(); i++) {
 			int count = flights.get(i).getSeatsLeft() + 1;
 			flights.get(i).setSeatsLeft(count);
 		}
-		return (List<Flight>) flightRepository.saveAll(flights);
+		return (List<FlightEntity>) flightRepository.saveAll(flights);
 	}
 }

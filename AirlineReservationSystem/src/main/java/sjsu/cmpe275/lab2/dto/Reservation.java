@@ -16,7 +16,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import sjsu.cmpe275.lab2.entity.Flight;
+import sjsu.cmpe275.lab2.entity.FlightEntity;
 import sjsu.cmpe275.lab2.entity.PassengerEntity;
 import sjsu.cmpe275.lab2.utils.View;
 
@@ -33,11 +33,11 @@ public class Reservation {
 	private double price;// sum of each flight's price
 
 	@JsonView({ View.ReservationView.class, View.PassengerView.class })
-	private List<Flight> flights;
+	private List<FlightEntity> flights;
 	public Reservation() {
 		
 	}
-	public Reservation(String reservationNumber, PassengerEntity passenger, double price, List<Flight> flights) {
+	public Reservation(String reservationNumber, PassengerEntity passenger, double price, List<FlightEntity> flights) {
 		super();
 		this.reservationNumber = reservationNumber;
 		this.passenger = passenger;
@@ -72,11 +72,11 @@ public class Reservation {
 		this.price = price;
 	}
 
-	public List<Flight> getFlights() {
+	public List<FlightEntity> getFlights() {
 		return flights;
 	}
 
-	public void setFlights(List<Flight> flights) {
+	public void setFlights(List<FlightEntity> flights) {
 		this.flights = flights;
 	}
 

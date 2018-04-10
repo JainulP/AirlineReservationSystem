@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sjsu.cmpe275.lab2.entity.Flight;
+
+import sjsu.cmpe275.lab2.dto.Flight;
+import sjsu.cmpe275.lab2.entity.FlightEntity;
 import sjsu.cmpe275.lab2.entity.Plane;
 import sjsu.cmpe275.lab2.service.FlightService;
 import sjsu.cmpe275.lab2.utils.Response;
@@ -22,38 +24,56 @@ import java.util.Date;
 @RestController
 public class FlightController {
 
-    @Autowired
-    private FlightService flightService;
+	@Autowired
+	private FlightService flightService;
 
-    /*
+	/*
 	 * Return flight details in JSON format
 	 */
-    @JsonView(View.FlightView.class)
-    @RequestMapping(value = "/flight/{flightNumber}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> getFlightJson(@PathVariable("flightNumber") String flightNumber) throws JSONException {
-        Flight flight = flightService.getFlight(flightNumber);
-        if (flight == null)
-            return new ResponseEntity<>(Utils.generateErrorResponse("BadRequest", 404, "Sorry, the requested flight with number " + flightNumber + " does not exist"), HttpStatus.NOT_FOUND);
-        else
-            return new ResponseEntity<>(flight, HttpStatus.OK);
+	@JsonView(View.FlightView.class)
+	@RequestMapping(value = "/flight/{flightNumber}", method = RequestMethod.GET, produces = {
+			MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<?> getFlightJson(@PathVariable("flightNumber") String flightNumber) throws JSONException {
+		FlightEntity flight = flightService.getFlight(flightNumber);
+		if (flight == null)
+			return new ResponseEntity<>(
+					Utils.generateErrorResponse("BadRequest", 404,
+							"Sorry, the requested flight with number " + flightNumber + " does not exist"),
+					HttpStatus.NOT_FOUND);
+		else {
+			Flight flightTemp = new Flight(flight.getFlightNumber(), flight.getPrice(), flight.getOrigin(),
+					flight.getDestinationTo(), flight.getDepartureTime(), flight.getArrivalTime(),
+					flight.getSeatsLeft(), flight.getDescription(), flight.getPlane(), flight.getPassengers());
+			return new ResponseEntity<>(flightTemp, HttpStatus.OK);
+		}
+			//return new ResponseEntity<>(flight, HttpStatus.OK);
 
-    }
+	}
 
-    /*
+	/*
 	 * Return flight details in XML format
 	 */
-    @JsonView(View.FlightView.class)
-    @RequestMapping(value = "/flight/{flightNumber}", params = {"xml"}, method = RequestMethod.GET, produces = {MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<?> getFlightXml(@PathVariable("flightNumber") String flightNumber, @RequestParam(value = "xml") String isXml) throws JSONException {
-        Flight flight = flightService.getFlight(flightNumber);
-        if (flight == null)
-            return new ResponseEntity<>(Utils.generateErrorResponse("BadRequest", 404, "Sorry, the requested flight with number " + flightNumber + " does not exist"), HttpStatus.NOT_FOUND);
-        else
-            return new ResponseEntity<>(flight, HttpStatus.OK);
+	@JsonView(View.FlightView.class)
+	@RequestMapping(value = "/flight/{flightNumber}", params = { "xml" }, method = RequestMethod.GET, produces = {
+			MediaType.APPLICATION_XML_VALUE })
+	public ResponseEntity<?> getFlightXml(@PathVariable("flightNumber") String flightNumber,
+			@RequestParam(value = "xml") String isXml) throws JSONException {
+		FlightEntity flight = flightService.getFlight(flightNumber);
+		if (flight == null)
+			return new ResponseEntity<>(
+					Utils.generateErrorResponse("BadRequest", 404,
+							"Sorry, the requested flight with number " + flightNumber + " does not exist"),
+					HttpStatus.NOT_FOUND);
+		else {
+			Flight flightTemp = new Flight(flight.getFlightNumber(), flight.getPrice(), flight.getOrigin(),
+					flight.getDestinationTo(), flight.getDepartureTime(), flight.getArrivalTime(),
+					flight.getSeatsLeft(), flight.getDescription(), flight.getPlane(), flight.getPassengers());
+			return new ResponseEntity<>(flightTemp, HttpStatus.OK);
+		}
 
-    }
+	}
 
-    @JsonView(View.FlightView.class)
+	@JsonView(View.FlightView.class)
     @RequestMapping(value = "/flight/{flightNumber}", method = RequestMethod.POST, produces = {MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<?> createOrUpdateFlight(@PathVariable("flightNumber") String flightNumber,
                                                   @RequestParam(value = "price") double price,
@@ -87,9 +107,12 @@ public class FlightController {
                     "Invalid Date Format! Please enter date in \"yyyy-MM-dd-HH\" format"),
                     HttpStatus.BAD_GATEWAY);
         }
-        Flight flight = flightService.getFlight(flightNumber);
+        FlightEntity flight = flightService.getFlight(flightNumber);
         if(flight == null){
-           return new ResponseEntity<>(flightService.createOrUpdate(new Flight(flightNumber,price,origin,destinationTo,departureTime,arrivalTime,description,new Plane(capacity,model,manufacturer,year))),HttpStatus.OK);
+        	
+        	FlightEntity flightS = flightService.createOrUpdate(new FlightEntity(flightNumber,price,origin,destinationTo,departureTime,arrivalTime,description,new Plane(capacity,model,manufacturer,year)));
+        	Flight flightTemp = new Flight(flightNumber, price, origin, destinationTo, departureTime, arrivalTime, flightS.getSeatsLeft(), description, flightS.getPlane(), flightS.getPassengers());
+        	return new ResponseEntity<>(flightTemp,HttpStatus.OK);
         }
         else{
             if (capacity < flight.getPassengers().size()) {
@@ -100,32 +123,42 @@ public class FlightController {
                 return new ResponseEntity<>(Utils.generateErrorResponse("BadRequest",400,"This update cannot proceed as it causes time overlapping for passenger."),HttpStatus.BAD_REQUEST);
             }
             else {
-                return new ResponseEntity<>(flightService.createOrUpdate(new Flight(flightNumber, price, origin, destinationTo, departureTime, arrivalTime, description, new Plane(capacity, model, manufacturer, year))), HttpStatus.OK);
+            	FlightEntity flightS = flightService.createOrUpdate(new FlightEntity(flightNumber,price,origin,destinationTo,departureTime,arrivalTime,description,new Plane(capacity,model,manufacturer,year)));
+            	Flight flightTemp = new Flight(flightNumber, price, origin, destinationTo, departureTime, arrivalTime, flightS.getSeatsLeft(), description, flightS.getPlane(), flightS.getPassengers());
+            	return new ResponseEntity<>(flightTemp,HttpStatus.OK);
+                //return new ResponseEntity<>(flightService.createOrUpdate(new Flight(flightNumber, price, origin, destinationTo, departureTime, arrivalTime, year, description, new Plane(capacity, model, manufacturer, year), null)), HttpStatus.OK);
             }
         }
     }
 
-    @JsonView(View.FlightView.class)
-    @RequestMapping(value = "/airline/{flightNumber}", method = RequestMethod.DELETE, produces = {MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<?> deleteFlight(@PathVariable(value="flightNumber") String flightNumber) throws JSONException {
-        Flight flight = flightService.getFlight(flightNumber);
-        if(flight == null){
-            return new ResponseEntity<>(Utils.generateErrorResponse("BadRequest", 404, "Sorry, the requested flight with number " + flightNumber + " does not exist"), HttpStatus.NOT_FOUND);
-        }
-        else
-        {
-            if(flight.getPassengers().size()>0){
-                return new ResponseEntity<>(Utils.generateErrorResponse("BadRequest", 400, "Sorry, the requested flight with number " + flightNumber + " could not be deleted as it has one or more reservations"), HttpStatus.BAD_REQUEST);
+	@JsonView(View.FlightView.class)
+	@RequestMapping(value = "/airline/{flightNumber}", method = RequestMethod.DELETE, produces = {
+			MediaType.APPLICATION_XML_VALUE })
+	public ResponseEntity<?> deleteFlight(@PathVariable(value = "flightNumber") String flightNumber)
+			throws JSONException {
+		FlightEntity flight = flightService.getFlight(flightNumber);
+		if (flight == null) {
+			return new ResponseEntity<>(
+					Utils.generateErrorResponse("BadRequest", 404,
+							"Sorry, the requested flight with number " + flightNumber + " does not exist"),
+					HttpStatus.NOT_FOUND);
+		} else {
+			if (flight.getPassengers().size() > 0) {
+				return new ResponseEntity<>(
+						Utils.generateErrorResponse("BadRequest", 400,
+								"Sorry, the requested flight with number " + flightNumber
+										+ " could not be deleted as it has one or more reservations"),
+						HttpStatus.BAD_REQUEST);
 
-            }
-            else{
-                flightService.deleteFlight(flightNumber);
-                return new ResponseEntity<>(new Response("Flight with number " + flightNumber + " is deleted successfully",200), HttpStatus.OK);
+			} else {
+				flightService.deleteFlight(flightNumber);
+				return new ResponseEntity<>(
+						new Response("Flight with number " + flightNumber + " is deleted successfully", 200),
+						HttpStatus.OK);
 
-            }
-        }
+			}
+		}
 
-    }
-
+	}
 
 }

@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import sjsu.cmpe275.lab2.entity.Flight;
+import sjsu.cmpe275.lab2.entity.FlightEntity;
 import sjsu.cmpe275.lab2.entity.PassengerEntity;
 import sjsu.cmpe275.lab2.entity.ReservationEntity;
 import sjsu.cmpe275.lab2.repository.FlightRepository;
@@ -46,7 +46,7 @@ public class ReservationService {
 	}
 
 	public ReservationEntity createReservation(ReservationEntity reservationTemp) {
-		List<Flight> flights = reservationTemp.getFlights();
+		List<FlightEntity> flights = reservationTemp.getFlights();
 		passengerService.decreaseSeats(flights);
 		double price = 0;
 		for (int i = 0; i < flights.size(); i++) {
@@ -58,7 +58,7 @@ public class ReservationService {
 	}
 
 	public ReservationEntity updateReservation(ReservationEntity reservationTemp) {
-		List<Flight> flights = reservationTemp.getFlights();
+		List<FlightEntity> flights = reservationTemp.getFlights();
 		passengerService.decreaseSeats(flights);
 		double price = 0;
 		for (int i = 0; i < flights.size(); i++) {

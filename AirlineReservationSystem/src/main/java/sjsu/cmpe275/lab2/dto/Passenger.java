@@ -16,7 +16,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import sjsu.cmpe275.lab2.entity.Flight;
+import sjsu.cmpe275.lab2.entity.FlightEntity;
 import sjsu.cmpe275.lab2.entity.ReservationEntity;
 import sjsu.cmpe275.lab2.utils.View;
 
@@ -52,7 +52,7 @@ public class Passenger {
 		this.phone = phone;
 		for (int i = 0; i < reservations.size(); i++) {
 			reservations.get(i).setPassenger(null);
-			List<Flight> flights = reservations.get(i).getFlights();
+			List<FlightEntity> flights = reservations.get(i).getFlights();
 			for (int j = 0; j < flights.size(); j++) {
 				flights.get(j).setPassengers(null);
 			}

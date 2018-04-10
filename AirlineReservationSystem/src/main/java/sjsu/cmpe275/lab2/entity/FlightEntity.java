@@ -14,7 +14,7 @@ import java.util.List;
 @XmlRootElement
 @Entity
 @Table(name = "FLIGHT")
-public class Flight {
+public class FlightEntity {
 
     @Id
     @Column(name = "FLIGHT_NUMBER",unique = true)
@@ -70,11 +70,11 @@ public class Flight {
     @JsonView(View.FlightView.class)
     private List<PassengerEntity> passengers;
 
-    public Flight() {
+    public FlightEntity() {
     }
 
     //public Flight(String flightNumber,double price, String origin, String destinationTo, String departureTime, String arrivalTime, int seatsLeft, String description, Plane plane) {
-    public Flight(String flightNumber,double price, String origin, String destinationTo, String departureTime, String arrivalTime, String description, Plane plane) {
+    public FlightEntity(String flightNumber,double price, String origin, String destinationTo, String departureTime, String arrivalTime, String description, Plane plane) {
         this.flightNumber = flightNumber;
         this.price = price;
         this.origin = origin;

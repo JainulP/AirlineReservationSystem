@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import sjsu.cmpe275.lab2.entity.Flight;
+import sjsu.cmpe275.lab2.entity.FlightEntity;
 import sjsu.cmpe275.lab2.entity.PassengerEntity;
 import sjsu.cmpe275.lab2.repository.FlightRepository;
 import sjsu.cmpe275.lab2.utils.Utils;
@@ -22,48 +22,48 @@ public class FlightService {
 	@Autowired
 	private FlightRepository flightRepository;
 
-	public Flight getFlight(String flightNumber) {
-		Optional<Flight> flight = flightRepository.findById(flightNumber);
+	public FlightEntity getFlight(String flightNumber) {
+		Optional<FlightEntity> flight = flightRepository.findById(flightNumber);
 		if (flight.isPresent()) {
 			return flight.get();
 		} else
 			return null;
 	}
 
-	public Flight createOrUpdate(Flight flight) {
+	public FlightEntity createOrUpdate(FlightEntity flight) {
 		// flight.setSeatsLeft(flight.getPlane().getCapacity());
 		// need to update seatsleft when capacity is updated
 
-		Optional<Flight> existingFlight = flightRepository.findById(flight.getFlightNumber());
+		Optional<FlightEntity> existingFlight = flightRepository.findById(flight.getFlightNumber());
 		if (existingFlight.isPresent()) {
-			Flight oldFlight = flightRepository.findById(flight.getFlightNumber()).get();
+			FlightEntity oldFlight = flightRepository.findById(flight.getFlightNumber()).get();
 			flight.setSeatsLeft(flight.getPlane().getCapacity() - oldFlight.getPassengers().size());
-			Flight created = flightRepository.save(flight);
+			FlightEntity created = flightRepository.save(flight);
 			return created;
 		} else {
 			flight.setSeatsLeft(flight.getPlane().getCapacity());
-			Flight created = flightRepository.save(flight);
+			FlightEntity created = flightRepository.save(flight);
 			return created;
 		}
 	}
 
 	public void deleteFlight(String flightNumber) {
-		Flight flight = flightRepository.findById(flightNumber).get();
+		FlightEntity flight = flightRepository.findById(flightNumber).get();
 		flightRepository.delete(flight);
 	}
 
-	public List<Flight> findAllFlights(List<String> flightnumbers) {
-		List<Flight> flights = (List<Flight>) flightRepository.findAllById(flightnumbers);
+	public List<FlightEntity> findAllFlights(List<String> flightnumbers) {
+		List<FlightEntity> flights = (List<FlightEntity>) flightRepository.findAllById(flightnumbers);
 		return flights;
 	}
 
-	public boolean isTimeOverlapping(Flight flight, String arrivalTime, String departureTime) {
+	public boolean isTimeOverlapping(FlightEntity flight, String arrivalTime, String departureTime) {
 		List<PassengerEntity> passengers = flight.getPassengers();
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh", Locale.US);
 		for (PassengerEntity passenger : passengers) {
-			List<Flight> bookedFlights = passenger.getFlights();
-			for (Flight bookedFlight : bookedFlights) {
+			List<FlightEntity> bookedFlights = passenger.getFlights();
+			for (FlightEntity bookedFlight : bookedFlights) {
 				try {
 					Date arrival = dateFormat.parse(bookedFlight.getArrivalTime());
 					Date departure = dateFormat.parse(bookedFlight.getDepartureTime());
@@ -83,7 +83,7 @@ public class FlightService {
 		return false;
 	}
 
-	public boolean checkAvailability(List<Flight> flights) {
+	public boolean checkAvailability(List<FlightEntity> flights) {
 		for (int i = 0; i < flights.size(); i++) {
 			if (flights.get(i).getSeatsLeft() < 1) {
 				return false;
@@ -93,14 +93,14 @@ public class FlightService {
 
 	}
 
-	public boolean checkIfFlightsOverlap(List<Flight> flightstoBeBooked, PassengerEntity passenger) {
+	public boolean checkIfFlightsOverlap(List<FlightEntity> flightstoBeBooked, PassengerEntity passenger) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh", Locale.US);
 		/*
 		 * List<String> passengerFlights = (List<String>)
 		 * flightRepository.findByPassengerId(passenger.getId()); List<Flight> flights =
 		 * (List<Flight>) flightRepository.findAllById(passengerFlights);
 		 */
-		List<Flight> flights = findFlightsByPassengerId(passenger.getId());
+		List<FlightEntity> flights = findFlightsByPassengerId(passenger.getId());
 		for (int i = 0; i < flightstoBeBooked.size(); i++) {
 			Date arrival = null;
 			Date departure = null;
@@ -129,9 +129,9 @@ public class FlightService {
 		return false;
 	}
 
-	public List<Flight> findFlightsByPassengerId(String passengerId) {
+	public List<FlightEntity> findFlightsByPassengerId(String passengerId) {
 		List<String> passengerFlights = (List<String>) flightRepository.findByPassengerId(passengerId);
-		List<Flight> flights = (List<Flight>) flightRepository.findAllById(passengerFlights);
+		List<FlightEntity> flights = (List<FlightEntity>) flightRepository.findAllById(passengerFlights);
 		return flights;
 	}
 	

@@ -40,7 +40,7 @@ public class ReservationEntity {
     joinColumns = {@JoinColumn(name="RESERVATION_NUM",referencedColumnName = "RESERVATION_NUMBER")},
     inverseJoinColumns = {@JoinColumn(name="FLIGHT_NUM", referencedColumnName ="FLIGHT_NUMBER" )})
     @JsonView({View.ReservationView.class,View.PassengerView.class})
-    private List<Flight> flights;
+    private List<FlightEntity> flights;
 
     public String getReservationNumber() {
         return reservationNumber;
@@ -67,11 +67,11 @@ public class ReservationEntity {
     }
 
     @JsonView({View.PassengerView.class,View.ReservationView.class})
-    public List<Flight> getFlights() {
+    public List<FlightEntity> getFlights() {
         return flights;
     }
 
-    public void setFlights(List<Flight> flights) {
+    public void setFlights(List<FlightEntity> flights) {
         this.flights = flights;
     }
 }

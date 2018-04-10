@@ -56,7 +56,7 @@ public class PassengerEntity {
 	@JoinTable(name = "PASSENGER_FLIGHT", joinColumns = {
 			@JoinColumn(name = "id", referencedColumnName = "id") }, inverseJoinColumns = {
 					@JoinColumn(name = "FLIGHT_NUM", referencedColumnName = "FLIGHT_NUMBER") })
-	private List<Flight> flights;
+	private List<FlightEntity> flights;
 
 	public PassengerEntity() {
 	}
@@ -127,13 +127,13 @@ public class PassengerEntity {
 	}
 
 	@XmlTransient
-	public List<Flight> getFlights() {
+	public List<FlightEntity> getFlights() {
 		return flights;
 	}
 
-	public void setFlights(List<Flight> flights) {
+	public void setFlights(List<FlightEntity> flights) {
 		if(flights!=null) {
-			this.flights = new ArrayList<Flight>(flights);
+			this.flights = new ArrayList<FlightEntity>(flights);
 		}
 		else {
 			this.flights = flights;
