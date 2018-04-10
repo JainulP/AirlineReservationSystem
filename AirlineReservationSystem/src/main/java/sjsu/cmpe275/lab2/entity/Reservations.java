@@ -11,11 +11,11 @@ import sjsu.cmpe275.lab2.dto.Reservation;
 public class Reservations {
 	List<Reservation> reservation;
 
-	public List<Reservation> getReservations() {
+	public List<Reservation> getReservation() {
 		return reservation;
 	}
 
-	public void setReservations(List<Reservation> reservation) {
+	public void setReservation(List<Reservation> reservation) {
 		this.reservation = reservation;
 	}
 

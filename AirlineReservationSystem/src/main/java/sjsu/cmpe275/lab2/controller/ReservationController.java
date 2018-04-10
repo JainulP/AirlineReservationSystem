@@ -193,7 +193,7 @@ public class ReservationController {
 				reservationSampleList.add(reservationSample);
 			}
 			Reservations reservationsTemp = new Reservations();
-			reservationsTemp.setReservations(reservationSampleList);
+			reservationsTemp.setReservation(reservationSampleList);
 			return new ResponseEntity<>(reservationsTemp, HttpStatus.OK);
 		}
 
