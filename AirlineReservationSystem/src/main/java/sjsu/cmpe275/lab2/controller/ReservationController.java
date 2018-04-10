@@ -3,6 +3,7 @@ package sjsu.cmpe275.lab2.controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import org.json.JSONException;
@@ -159,10 +160,13 @@ public class ReservationController {
 	 */
 	@JsonView(View.ReservationView.class)
 	@RequestMapping(method = RequestMethod.GET, produces = { MediaType.APPLICATION_XML_VALUE })
-	public ResponseEntity<?> searchReservationXml(@RequestParam(value = "passengerId") String passengerId,
-			@RequestParam(value = "origin") String origin, @RequestParam(value = "destination") String destination,
-			@RequestParam(value = "flightNumber") String flightNumber) {
-		List<Reservation> reservations = reservationService.searchReservation(passengerId, origin, destination, flightNumber);
+	public ResponseEntity<?> searchReservationXml(
+			@RequestParam(value = "passengerId", required = false) String passengerId,
+			@RequestParam(value = "origin", required = false) String origin,
+			@RequestParam(value = "destination", required = false) String destination,
+			@RequestParam(value = "flightNumber", required = false) String flightNumber) {
+		List<Reservation> reservations = reservationService.searchReservation(passengerId, origin, destination,
+				flightNumber);
 		if (reservations.size() == 0)
 			return new ResponseEntity<>(Utils.generateErrorResponse("BadRequest", 404,
 					"Reservations with the specified criteria does not exist"), HttpStatus.NOT_FOUND);

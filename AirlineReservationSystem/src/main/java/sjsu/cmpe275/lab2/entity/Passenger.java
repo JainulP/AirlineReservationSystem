@@ -132,6 +132,12 @@ public class Passenger {
 	}
 
 	public void setFlights(List<Flight> flights) {
-		this.flights = new ArrayList<Flight>(flights);
+		if(flights!=null) {
+			this.flights = new ArrayList<Flight>(flights);
+		}
+		else {
+			this.flights = flights;
+		}
+		
 	}
 }

@@ -67,7 +67,8 @@ public class FlightService {
 					Date min = dateFormat.parse(departureTime);
 					Date max = dateFormat.parse(arrivalTime);
 
-					if ((arrival.compareTo(min) >= 0 && arrival.compareTo(max) <= 0) || (departure.compareTo(min) >= 0 && departure.compareTo(max) <= 0)) {
+					if ((arrival.compareTo(min) >= 0 && arrival.compareTo(max) <= 0)
+							|| (departure.compareTo(min) >= 0 && departure.compareTo(max) <= 0)) {
 						return true;
 					}
 
@@ -91,8 +92,12 @@ public class FlightService {
 
 	public boolean checkIfFlightsOverlap(List<Flight> flightstoBeBooked, Passenger passenger) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh", Locale.US);
-		List<String> passengerFlights = (List<String>) flightRepository.findByPassengerId(passenger.getId());
-		List<Flight> flights = (List<Flight>) flightRepository.findAllById(passengerFlights);
+		/*
+		 * List<String> passengerFlights = (List<String>)
+		 * flightRepository.findByPassengerId(passenger.getId()); List<Flight> flights =
+		 * (List<Flight>) flightRepository.findAllById(passengerFlights);
+		 */
+		List<Flight> flights = findFlightsByPassengerId(passenger.getId());
 		for (int i = 0; i < flightstoBeBooked.size(); i++) {
 			Date arrival = null;
 			Date departure = null;
@@ -121,4 +126,16 @@ public class FlightService {
 		return false;
 	}
 
+	public List<Flight> findFlightsByPassengerId(String passengerId) {
+		List<String> passengerFlights = (List<String>) flightRepository.findByPassengerId(passengerId);
+		List<Flight> flights = (List<Flight>) flightRepository.findAllById(passengerFlights);
+		return flights;
+	}
+	
+	/*public Set<Flight> findFlightsByPassengerIdSet(String passengerId) {
+		Set<String> passengerFlights = (Set<String>) flightRepository.findByPassengerId(passengerId);
+		Set<Flight> flights = (Set<Flight>) flightRepository.findAllById(passengerFlights);
+		return flights;
+	}
+*/
 }

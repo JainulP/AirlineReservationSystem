@@ -3,6 +3,8 @@ package sjsu.cmpe275.lab2.service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import sjsu.cmpe275.lab2.entity.Flight;
 import sjsu.cmpe275.lab2.entity.Passenger;
 import sjsu.cmpe275.lab2.entity.Reservation;
@@ -11,8 +13,10 @@ import sjsu.cmpe275.lab2.repository.PassengerRepository;
 import sjsu.cmpe275.lab2.repository.ReservationRepository;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ReservationService {
@@ -26,6 +30,9 @@ public class ReservationService {
 
 	@Autowired
 	private PassengerService passengerService;
+
+	@Autowired
+	private FlightService flightService;
 
 	public Reservation getReservation(String reservationNumber) {
 		Optional<Reservation> reservation = reservationRepository.findById(reservationNumber);
@@ -74,22 +81,49 @@ public class ReservationService {
 		}
 	}
 
-	public List<Reservation> searchReservation(String passengerId, String origin, String destination, String flightNumber) {
-		List<Reservation> reservations = new ArrayList<>();
-//		Passenger passenger = passengerRepository.findById(passengerId).get();
-//		if(passenger != null){
-//			//List<Reservation> res = passenger.getReservations();
-//			List<Flight> flights = passenger.getFlights();
-//			for(Flight flight : flights){
-//				if (!flight.getFlightNumber().equals(flightNumber)){
-//					flights.remove(flight);
-//				}
-//			}
-//
-//
-//		}
+	public List<Reservation> searchReservation(String passengerId, String origin, String destination,
+			String flightNumber) {
+		Set<String> reservations_passengerid = new HashSet<String>();
+		Set<String> reservations_origin = new HashSet<String>();
+		Set<String> reservations_destination = new HashSet<String>();
+		Set<String> reservations_flightNum = new HashSet<String>();
+		Set<String> finalSet = new HashSet<String>();
 
-				return reservationRepository.searchForReservations(passengerId,origin,destination,flightNumber);
-		//return null;
+		if (passengerId != null) {
+			reservations_passengerid = reservationRepository.findByPassengerIdSet(passengerId);
+			if (finalSet.size() == 0) {
+				finalSet.addAll(reservations_passengerid);
+			}
+		}
+		if (origin != null) {
+			reservations_origin = reservationRepository.findByOrigin(origin);
+			if (finalSet.size() == 0) {
+				finalSet.addAll(reservations_origin);
+			} else {
+				finalSet.retainAll(reservations_origin);
+			}
+		}
+		if (destination != null) {
+			reservations_destination = reservationRepository.findByDestination(destination);
+			if (finalSet.size() == 0) {
+				finalSet.addAll(reservations_destination);
+			} else {
+				finalSet.retainAll(reservations_destination);
+			}
+		}
+		if (flightNumber != null) {
+			reservations_flightNum = reservationRepository.findByFlightNum(flightNumber);
+			if (finalSet.size() == 0) {
+				finalSet.addAll(reservations_flightNum);
+			} else {
+				finalSet.retainAll(reservations_flightNum);
+			}
+		}
+		List<Reservation> res = new ArrayList<>();
+		for (String res_num : finalSet) {
+			Reservation temp = reservationRepository.findById(res_num).get();
+			res.add(temp);
+		}
+		return res;
 	}
 }
