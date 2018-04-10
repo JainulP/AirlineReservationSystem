@@ -3,12 +3,12 @@ package sjsu.cmpe275.lab2.repository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
-import sjsu.cmpe275.lab2.entity.Reservation;
+import sjsu.cmpe275.lab2.entity.ReservationEntity;
 
 import java.util.List;
 import java.util.Set;
 
-public interface ReservationRepository extends CrudRepository<Reservation, String> {
+public interface ReservationRepository extends CrudRepository<ReservationEntity, String> {
 	/*// @Query(value = "SELECT DISTINCT r.reservation_number FROM PASSENGER p,
 	// RESERVATION r, RESERVATION_FLIGHT rf, FLIGHT f,PASSENGER_FLIGHT pf " +
 	// "WHERE p.id = 'b8e17e9b-02d7-4e5e-9f8e-2cffaa5568a1' AND f.flight_number =
@@ -25,7 +25,7 @@ public interface ReservationRepository extends CrudRepository<Reservation, Strin
 			@Param("destination") String destination, @Param("flightNumber") String flightNumber);
 */
 	@Query(value = "SELECT * FROM reservation WHERE id = ?1", nativeQuery = true)
-	List<Reservation> findByPassengerId(String passengerId);
+	List<ReservationEntity> findByPassengerId(String passengerId);
 
 	@Query(value = "SELECT  reservation_number FROM reservation WHERE id = ?1", nativeQuery = true)
 	Set<String> findByPassengerIdSet(String passengerId);

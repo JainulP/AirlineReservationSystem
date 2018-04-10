@@ -17,7 +17,7 @@ import java.util.List;
 //        "WHERE p.id = :passengerId AND f.flight_number = :flightNumber  AND p.id = pf.id AND pf.flight_num = f.flight_number AND rf.flight_num = f.flight_number " +
 //        "AND f.origin = COALESCE(:origin,f.origin) and f.destination_to = COALESCE(:destination,f.destination_to)",
 //        resultClass = Reservation.class)
-public class Reservation {
+public class ReservationEntity {
 
     @Id
     @GeneratedValue(generator = "uuid")
