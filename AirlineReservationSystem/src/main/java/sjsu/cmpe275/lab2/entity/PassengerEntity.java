@@ -49,7 +49,7 @@ public class PassengerEntity {
 	// reservation made by the passenger should also be deleted.
 	@JsonView(View.PassengerView.class)
 	@OneToMany(mappedBy = "passenger", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
-	private List<Reservation> reservations;
+	private List<ReservationEntity> reservations;
 
 
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
@@ -118,11 +118,11 @@ public class PassengerEntity {
 	}
 
 	@XmlTransient
-	public List<Reservation> getReservations() {
+	public List<ReservationEntity> getReservations() {
 		return reservations;
 	}
 
-	public void setReservations(List<Reservation> reservations) {
+	public void setReservations(List<ReservationEntity> reservations) {
 		this.reservations = reservations;
 	}
 

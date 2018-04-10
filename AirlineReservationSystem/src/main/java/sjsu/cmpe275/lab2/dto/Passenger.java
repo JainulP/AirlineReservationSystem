@@ -17,7 +17,7 @@ import org.hibernate.annotations.GenericGenerator;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import sjsu.cmpe275.lab2.entity.Flight;
-import sjsu.cmpe275.lab2.entity.Reservation;
+import sjsu.cmpe275.lab2.entity.ReservationEntity;
 import sjsu.cmpe275.lab2.utils.View;
 
 @XmlRootElement
@@ -35,14 +35,14 @@ public class Passenger {
 	@JsonView({ View.ReservationView.class, View.PassengerView.class, View.FlightView.class })
 	private String phone;
 	@JsonView(View.PassengerView.class)
-	private List<Reservation> reservations;
+	private List<ReservationEntity> reservations;
 
 	public Passenger() {
 
 	}
 
 	public Passenger(String id, String firstname, String lastname, int age, String gender, String phone,
-			List<Reservation> reservations) {
+			List<ReservationEntity> reservations) {
 		super();
 		this.id = id;
 		this.firstname = firstname;
@@ -108,11 +108,11 @@ public class Passenger {
 		this.phone = phone;
 	}
 
-	public List<Reservation> getReservations() {
+	public List<ReservationEntity> getReservations() {
 		return reservations;
 	}
 
-	public void setReservations(List<Reservation> reservations) {
+	public void setReservations(List<ReservationEntity> reservations) {
 		this.reservations = reservations;
 	}
 

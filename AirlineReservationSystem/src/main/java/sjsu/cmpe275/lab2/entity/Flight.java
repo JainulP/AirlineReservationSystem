@@ -60,7 +60,7 @@ public class Flight {
             joinColumns = {@JoinColumn(name="FLIGHT_NUM", referencedColumnName ="FLIGHT_NUMBER" )},
             inverseJoinColumns = {@JoinColumn(name="RESERVATION_NUM",referencedColumnName = "RESERVATION_NUMBER")})
     //@JsonView({View.ReservationView.class,View.PassengerView.class})
-    private List<Reservation> reservations;
+    private List<ReservationEntity> reservations;
 
     @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name="PASSENGER_FLIGHT",
@@ -169,11 +169,11 @@ public class Flight {
         this.passengers = passengers;
     }
    @XmlTransient
-    public List<Reservation> getReservations() {
+    public List<ReservationEntity> getReservations() {
         return reservations;
     }
 
-    public void setReservations(List<Reservation> reservations) {
+    public void setReservations(List<ReservationEntity> reservations) {
         this.reservations = reservations;
     }
 }
