@@ -57,7 +57,6 @@ public class FlightService {
 
 	public boolean isTimeOverlapping(Flight flight, String arrivalTime, String departureTime) {
 		List<Passenger> passengers = flight.getPassengers();
-//		List<Interval> intervals = new ArrayList<>();
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh", Locale.US);
 		for (Passenger passenger : passengers) {
@@ -69,19 +68,12 @@ public class FlightService {
 					Date min = dateFormat.parse(departureTime);
 					Date max = dateFormat.parse(arrivalTime);
 					if ((arrival.compareTo(min) >= 0 && arrival.compareTo(max) <= 0) || (departure.compareTo(min) >= 0 && departure.compareTo(max) <= 0)) {
-						//System.out.println("I am failing update flight here checkCurrentreservationFlightsTimings");
-						//List<Flight> flightList= new ArrayList<Flight>();
-						//return flight;
 						return true;
 					}
-
-//					Interval interval = new Interval(departure.getTime(),arrival.getTime());
-//					intervals.add(interval);
 				} catch (ParseException e) {
 					System.out.println("BadRequest " + "417" + " Invalid Date Format");
 				}
 			}
-			//intervals.sort(intervals, new IntervalStartComparator());
 		}
 		return false;
 	}

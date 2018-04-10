@@ -65,7 +65,7 @@ public class Flight {
     @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name="PASSENGER_FLIGHT",
             joinColumns = {@JoinColumn(name="FLIGHT_NUM", referencedColumnName ="FLIGHT_NUMBER")},
-            inverseJoinColumns = {@JoinColumn(name="p_id", referencedColumnName ="p_id" )})
+            inverseJoinColumns = {@JoinColumn(name="id", referencedColumnName ="id" )})
    // @ManyToMany(mappedBy = "flights")
     @JsonView(View.FlightView.class)
     private List<Passenger> passengers;

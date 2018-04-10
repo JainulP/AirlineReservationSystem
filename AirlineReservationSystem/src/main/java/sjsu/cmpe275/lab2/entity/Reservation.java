@@ -2,6 +2,7 @@ package sjsu.cmpe275.lab2.entity;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.jpa.repository.Query;
 import sjsu.cmpe275.lab2.utils.View;
 
 import javax.persistence.*;
@@ -12,6 +13,10 @@ import java.util.List;
 @XmlRootElement
 @Entity
 @Table(name = "RESERVATION")
+//@NamedNativeQuery(name= "Reservation.searchForReservation" ,query = "SELECT DISTINCT r.reservation_number FROM PASSENGER p, RESERVATION r, RESERVATION_FLIGHT rf, FLIGHT f,PASSENGER_FLIGHT pf " +
+//        "WHERE p.id = :passengerId AND f.flight_number = :flightNumber  AND p.id = pf.id AND pf.flight_num = f.flight_number AND rf.flight_num = f.flight_number " +
+//        "AND f.origin = COALESCE(:origin,f.origin) and f.destination_to = COALESCE(:destination,f.destination_to)",
+//        resultClass = Reservation.class)
 public class Reservation {
 
     @Id
@@ -22,7 +27,7 @@ public class Reservation {
     private String reservationNumber;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name="p_id")
+    @JoinColumn(name="id")
     @JsonView({View.ReservationView.class})
     private Passenger passenger;
 
@@ -61,6 +66,7 @@ public class Reservation {
         this.price = price;
     }
 
+    @JsonView(View.PassengerView.class)
     public List<Flight> getFlights() {
         return flights;
     }

@@ -22,9 +22,9 @@ public class Passenger {
 	@Id
 	@GeneratedValue(generator = "uuid")
 	@GenericGenerator(name = "uuid", strategy = "uuid2")
-	@Column(name = "p_id")
+	@Column(name = "id")
 	@JsonView({ View.ReservationView.class, View.PassengerView.class, View.FlightView.class })
-	private String p_id;
+	private String id;
 
 	@Column(name = "FIRST_NAME")
 	@JsonView({ View.ReservationView.class, View.PassengerView.class, View.FlightView.class })
@@ -54,7 +54,7 @@ public class Passenger {
 
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "PASSENGER_FLIGHT", joinColumns = {
-			@JoinColumn(name = "p_id", referencedColumnName = "p_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "id", referencedColumnName = "id") }, inverseJoinColumns = {
 					@JoinColumn(name = "FLIGHT_NUM", referencedColumnName = "FLIGHT_NUMBER") })
 	private List<Flight> flights;
 
@@ -69,12 +69,12 @@ public class Passenger {
 		this.phone = phone;
 	}
 
-	public String getP_id() {
-		return p_id;
+	public String getId() {
+		return id;
 	}
 
-	public void setP_id(String p_id) {
-		this.p_id = p_id;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getFirstname() {

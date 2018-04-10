@@ -6,8 +6,11 @@ import org.springframework.stereotype.Service;
 import sjsu.cmpe275.lab2.entity.Flight;
 import sjsu.cmpe275.lab2.entity.Passenger;
 import sjsu.cmpe275.lab2.entity.Reservation;
+import sjsu.cmpe275.lab2.repository.FlightRepository;
+import sjsu.cmpe275.lab2.repository.PassengerRepository;
 import sjsu.cmpe275.lab2.repository.ReservationRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +19,10 @@ public class ReservationService {
 
 	@Autowired
 	private ReservationRepository reservationRepository;
+	@Autowired
+	PassengerRepository passengerRepository;
+	@Autowired
+	FlightRepository flightRepository;
 
 	@Autowired
 	private PassengerService passengerService;
@@ -67,8 +74,22 @@ public class ReservationService {
 		}
 	}
 
-	public List<Reservation> searchReservation(String passengerId, String origin, String to, String flightNumber) {
+	public List<Reservation> searchReservation(String passengerId, String origin, String destination, String flightNumber) {
+		List<Reservation> reservations = new ArrayList<>();
+//		Passenger passenger = passengerRepository.findById(passengerId).get();
+//		if(passenger != null){
+//			//List<Reservation> res = passenger.getReservations();
+//			List<Flight> flights = passenger.getFlights();
+//			for(Flight flight : flights){
+//				if (!flight.getFlightNumber().equals(flightNumber)){
+//					flights.remove(flight);
+//				}
+//			}
+//
+//
+//		}
 
-		return null;
+				return reservationRepository.searchForReservations(passengerId,origin,destination,flightNumber);
+		//return null;
 	}
 }
