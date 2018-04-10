@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import sjsu.cmpe275.lab2.entity.Flight;
 import sjsu.cmpe275.lab2.entity.Passenger;
 import sjsu.cmpe275.lab2.entity.Reservation;
+import sjsu.cmpe275.lab2.entity.Reservations;
 import sjsu.cmpe275.lab2.service.FlightService;
 import sjsu.cmpe275.lab2.service.PassengerService;
 import sjsu.cmpe275.lab2.service.ReservationService;
@@ -159,7 +160,7 @@ public class ReservationController {
 	 * Search Reservation details in XML format
 	 */
 	@JsonView(View.ReservationView.class)
-	@RequestMapping(method = RequestMethod.GET, produces = { MediaType.APPLICATION_XML_VALUE })
+	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
 	public ResponseEntity<?> searchReservationXml(
 			@RequestParam(value = "passengerId", required = false) String passengerId,
 			@RequestParam(value = "origin", required = false) String origin,
@@ -170,8 +171,12 @@ public class ReservationController {
 		if (reservations.size() == 0)
 			return new ResponseEntity<>(Utils.generateErrorResponse("BadRequest", 404,
 					"Reservations with the specified criteria does not exist"), HttpStatus.NOT_FOUND);
-		else
-			return new ResponseEntity<>(reservations, HttpStatus.OK);
+		else {
+			Reservations reservationsTemp =  new Reservations();
+			reservationsTemp.setReservations(reservations);
+			return new ResponseEntity<>(reservationsTemp, HttpStatus.OK);
+		}
+			
 
 	}
 
