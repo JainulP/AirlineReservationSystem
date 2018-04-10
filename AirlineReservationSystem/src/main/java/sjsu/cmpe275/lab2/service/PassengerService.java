@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import sjsu.cmpe275.lab2.entity.Flight;
-import sjsu.cmpe275.lab2.entity.Passenger;
+import sjsu.cmpe275.lab2.entity.PassengerEntity;
 import sjsu.cmpe275.lab2.repository.FlightRepository;
 import sjsu.cmpe275.lab2.repository.PassengerRepository;
 
@@ -24,7 +24,7 @@ public class PassengerService {
 	 * 
 	 * @return the passenger details
 	 */
-	public Passenger getPassenger(String passengerId) {
+	public PassengerEntity getPassenger(String passengerId) {
 		return passengerRepository.findById(passengerId).get();
 	}
 
@@ -33,7 +33,7 @@ public class PassengerService {
 	 * 
 	 * @return the passenger
 	 */
-	public Passenger createPassenger(Passenger passenger) {
+	public PassengerEntity createPassenger(PassengerEntity passenger) {
 		return passengerRepository.save(passenger);
 	}
 
@@ -42,8 +42,8 @@ public class PassengerService {
 	 * 
 	 * @return the passenger
 	 */
-	public Passenger updatePassenger(Passenger passenger) {
-		Passenger passenger_temp = passengerRepository.findById(passenger.getId()).get();
+	public PassengerEntity updatePassenger(PassengerEntity passenger) {
+		PassengerEntity passenger_temp = passengerRepository.findById(passenger.getId()).get();
 		passenger_temp.setFirstname(passenger.getFirstname());
 		passenger_temp.setLastname(passenger.getLastname());
 		passenger_temp.setGender(passenger.getGender());
@@ -59,7 +59,7 @@ public class PassengerService {
 	 */
 	public boolean deletePassenger(String passengerId) {
 		// increase the seats in flights
-		Passenger passenger = passengerRepository.findById(passengerId).get();
+		PassengerEntity passenger = passengerRepository.findById(passengerId).get();
 		List<Flight> flights = passenger.getFlights();
 		increaseSeats(flights);
 		boolean doesExists = passengerRepository.existsById(passengerId);

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import sjsu.cmpe275.lab2.entity.Flight;
-import sjsu.cmpe275.lab2.entity.Passenger;
+import sjsu.cmpe275.lab2.entity.PassengerEntity;
 import sjsu.cmpe275.lab2.entity.Reservation;
 import sjsu.cmpe275.lab2.repository.FlightRepository;
 import sjsu.cmpe275.lab2.repository.PassengerRepository;
@@ -71,7 +71,7 @@ public class ReservationService {
 		boolean doesExists = reservationRepository.existsById(reservationNum);
 		if (doesExists) {
 			Reservation reservation = reservationRepository.findById(reservationNum).get();
-			Passenger passenger = reservation.getPassenger();
+			PassengerEntity passenger = reservation.getPassenger();
 			passenger.setFlights(null);
 			reservationRepository.save(reservation);
 			reservationRepository.deleteById(reservationNum);

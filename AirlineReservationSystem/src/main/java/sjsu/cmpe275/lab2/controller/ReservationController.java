@@ -13,7 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sjsu.cmpe275.lab2.entity.Flight;
-import sjsu.cmpe275.lab2.entity.Passenger;
+import sjsu.cmpe275.lab2.entity.PassengerEntity;
 import sjsu.cmpe275.lab2.entity.Reservation;
 import sjsu.cmpe275.lab2.entity.Reservations;
 import sjsu.cmpe275.lab2.service.FlightService;
@@ -76,7 +76,7 @@ public class ReservationController {
 	public ResponseEntity<?> createReservation(@RequestParam(value = "passengerId") String passengerId,
 			@RequestParam(value = "flightLists") String flightLists) {
 		Reservation reservation = new Reservation();
-		Passenger passenger = passengerService.getPassenger(passengerId);
+		PassengerEntity passenger = passengerService.getPassenger(passengerId);
 		reservation.setPassenger(passenger);
 		List<String> list = new ArrayList<String>(Arrays.asList(flightLists.split(",")));
 		List<Flight> flights = flightService.findAllFlights(list);
@@ -133,7 +133,7 @@ public class ReservationController {
 			flights.add(flight);
 		}
 
-		Passenger passenger = reservation.getPassenger();
+		PassengerEntity passenger = reservation.getPassenger();
 		passenger.setFlights(flights);
 		Reservation reservation_res = reservationService.updateReservation(reservation);
 		return new ResponseEntity<>(reservation_res, HttpStatus.CREATED);

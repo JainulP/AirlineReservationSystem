@@ -68,7 +68,7 @@ public class Flight {
             inverseJoinColumns = {@JoinColumn(name="id", referencedColumnName ="id" )})
    // @ManyToMany(mappedBy = "flights")
     @JsonView(View.FlightView.class)
-    private List<Passenger> passengers;
+    private List<PassengerEntity> passengers;
 
     public Flight() {
     }
@@ -160,12 +160,12 @@ public class Flight {
 
 //   @JsonIgnore
     @JsonView(View.FlightView.class)
-    public List<Passenger> getPassengers() {
+    public List<PassengerEntity> getPassengers() {
         return passengers;
     }
 
     @JsonView(View.FlightView.class)
-    public void setPassengers(List<Passenger> passengers) {
+    public void setPassengers(List<PassengerEntity> passengers) {
         this.passengers = passengers;
     }
    @XmlTransient

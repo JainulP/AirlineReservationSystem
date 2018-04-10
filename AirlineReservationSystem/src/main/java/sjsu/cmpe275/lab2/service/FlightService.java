@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import sjsu.cmpe275.lab2.entity.Flight;
-import sjsu.cmpe275.lab2.entity.Passenger;
+import sjsu.cmpe275.lab2.entity.PassengerEntity;
 import sjsu.cmpe275.lab2.repository.FlightRepository;
 import sjsu.cmpe275.lab2.utils.Utils;
 import java.text.ParseException;
@@ -55,10 +55,10 @@ public class FlightService {
 	}
 
 	public boolean isTimeOverlapping(Flight flight, String arrivalTime, String departureTime) {
-		List<Passenger> passengers = flight.getPassengers();
+		List<PassengerEntity> passengers = flight.getPassengers();
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh", Locale.US);
-		for (Passenger passenger : passengers) {
+		for (PassengerEntity passenger : passengers) {
 			List<Flight> bookedFlights = passenger.getFlights();
 			for (Flight bookedFlight : bookedFlights) {
 				try {
@@ -90,7 +90,7 @@ public class FlightService {
 
 	}
 
-	public boolean checkIfFlightsOverlap(List<Flight> flightstoBeBooked, Passenger passenger) {
+	public boolean checkIfFlightsOverlap(List<Flight> flightstoBeBooked, PassengerEntity passenger) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh", Locale.US);
 		/*
 		 * List<String> passengerFlights = (List<String>)

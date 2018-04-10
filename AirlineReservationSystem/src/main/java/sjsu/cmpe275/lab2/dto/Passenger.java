@@ -1,72 +1,63 @@
-package sjsu.cmpe275.lab2.entity;
+package sjsu.cmpe275.lab2.dto;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.hibernate.annotations.GenericGenerator;
-import sjsu.cmpe275.lab2.utils.View;
-
-import javax.persistence.*;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-
-import java.util.ArrayList;
 import java.util.List;
 
-@XmlRootElement
-@Entity
-@Table(name = "PASSENGER")
-public class Passenger {
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlRootElement;
 
-	@Id
-	@GeneratedValue(generator = "uuid")
-	@GenericGenerator(name = "uuid", strategy = "uuid2")
-	@Column(name = "id")
+import org.hibernate.annotations.GenericGenerator;
+
+import com.fasterxml.jackson.annotation.JsonView;
+
+import sjsu.cmpe275.lab2.entity.Flight;
+import sjsu.cmpe275.lab2.entity.Reservation;
+import sjsu.cmpe275.lab2.utils.View;
+
+@XmlRootElement
+public class Passenger {
 	@JsonView({ View.ReservationView.class, View.PassengerView.class, View.FlightView.class })
 	private String id;
-
-	@Column(name = "FIRST_NAME")
 	@JsonView({ View.ReservationView.class, View.PassengerView.class, View.FlightView.class })
 	private String firstname;
-
-	@Column(name = "LAST_NAME")
 	@JsonView({ View.ReservationView.class, View.PassengerView.class, View.FlightView.class })
 	private String lastname;
-
-	@Column(name = "AGE")
 	@JsonView({ View.ReservationView.class, View.PassengerView.class, View.FlightView.class })
 	private int age;
-
-	@Column(name = "GENDER")
 	@JsonView({ View.ReservationView.class, View.PassengerView.class, View.FlightView.class })
 	private String gender;
-
-	@Column(name = "PHONE", unique = true)
 	@JsonView({ View.ReservationView.class, View.PassengerView.class, View.FlightView.class })
 	private String phone;
-
-	// reservation made by the passenger should also be deleted.
 	@JsonView(View.PassengerView.class)
-	@OneToMany(mappedBy = "passenger", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
 	private List<Reservation> reservations;
 
-
-	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	@JoinTable(name = "PASSENGER_FLIGHT", joinColumns = {
-			@JoinColumn(name = "id", referencedColumnName = "id") }, inverseJoinColumns = {
-					@JoinColumn(name = "FLIGHT_NUM", referencedColumnName = "FLIGHT_NUMBER") })
-	private List<Flight> flights;
-
 	public Passenger() {
+
 	}
 
-	public Passenger(String firstname, String lastname, int age, String gender, String phone) {
+	public Passenger(String id, String firstname, String lastname, int age, String gender, String phone,
+			List<Reservation> reservations) {
+		super();
+		this.id = id;
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.age = age;
 		this.gender = gender;
 		this.phone = phone;
+		for (int i = 0; i < reservations.size(); i++) {
+			reservations.get(i).setPassenger(null);
+			List<Flight> flights = reservations.get(i).getFlights();
+			for (int j = 0; j < flights.size(); j++) {
+				flights.get(j).setPassengers(null);
+			}
+		}
+		this.reservations = reservations;
 	}
 
 	public String getId() {
@@ -117,7 +108,6 @@ public class Passenger {
 		this.phone = phone;
 	}
 
-	@XmlTransient
 	public List<Reservation> getReservations() {
 		return reservations;
 	}
@@ -126,18 +116,4 @@ public class Passenger {
 		this.reservations = reservations;
 	}
 
-	@XmlTransient
-	public List<Flight> getFlights() {
-		return flights;
-	}
-
-	public void setFlights(List<Flight> flights) {
-		if(flights!=null) {
-			this.flights = new ArrayList<Flight>(flights);
-		}
-		else {
-			this.flights = flights;
-		}
-		
-	}
 }

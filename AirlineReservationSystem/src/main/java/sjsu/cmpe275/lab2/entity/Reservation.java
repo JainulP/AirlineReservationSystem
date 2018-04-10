@@ -29,7 +29,7 @@ public class Reservation {
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name="id")
     @JsonView({View.ReservationView.class})
-    private Passenger passenger;
+    private PassengerEntity passenger;
 
     @Column(name="PRICE")
     @JsonView({View.ReservationView.class,View.PassengerView.class})
@@ -50,11 +50,11 @@ public class Reservation {
         this.reservationNumber = reservationNumber;
     }
 
-    public Passenger getPassenger() {
+    public PassengerEntity getPassenger() {
         return passenger;
     }
 
-    public void setPassenger(Passenger passenger) {
+    public void setPassenger(PassengerEntity passenger) {
         this.passenger = passenger;
     }
 
