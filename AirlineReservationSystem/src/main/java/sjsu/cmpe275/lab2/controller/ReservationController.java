@@ -78,11 +78,18 @@ public class ReservationController {
 		reservation.setPassenger(passenger);
 		List<String> list = new ArrayList<String>(Arrays.asList(flightLists.split(",")));
 		List<Flight> flights = flightService.findAllFlights(list);
-		boolean status = flightService.checkAvailability(flights);
-		if (status == false) {
+		boolean statusAvailability = flightService.checkAvailability(flights);
+		if (statusAvailability == false) {
 			return new ResponseEntity<>(Utils.generateErrorResponse("BadRequest", 404, "Seats not available"),
 					HttpStatus.NOT_FOUND);
 		}
+
+		boolean statusOverlap = flightService.checkIfFlightsOverlap(flights, passenger);
+		if (statusOverlap == true) {
+			return new ResponseEntity<>(Utils.generateErrorResponse("BadRequest", 404, "Flights overlapping"),
+					HttpStatus.NOT_FOUND);
+		}
+
 		passenger.setFlights(flights);
 		reservation.setFlights(flights);
 		Reservation reservation_res = reservationService.createReservation(reservation);
