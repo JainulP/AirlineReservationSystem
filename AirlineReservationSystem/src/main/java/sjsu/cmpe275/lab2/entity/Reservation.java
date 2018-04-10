@@ -66,7 +66,7 @@ public class Reservation {
         this.price = price;
     }
 
-    @JsonView(View.PassengerView.class)
+    @JsonView({View.PassengerView.class,View.ReservationView.class})
     public List<Flight> getFlights() {
         return flights;
     }
