@@ -12,6 +12,7 @@ import sjsu.cmpe275.lab2.repository.FlightRepository;
 import sjsu.cmpe275.lab2.repository.PassengerRepository;
 import sjsu.cmpe275.lab2.repository.ReservationRepository;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
+@Transactional(Transactional.TxType.REQUIRED)
 public class ReservationService {
 
 	@Autowired

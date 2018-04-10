@@ -10,7 +10,10 @@ import sjsu.cmpe275.lab2.entity.PassengerEntity;
 import sjsu.cmpe275.lab2.repository.FlightRepository;
 import sjsu.cmpe275.lab2.repository.PassengerRepository;
 
+import javax.transaction.Transactional;
+
 @Service
+@Transactional(Transactional.TxType.REQUIRED)
 public class PassengerService {
 
 	@Autowired
