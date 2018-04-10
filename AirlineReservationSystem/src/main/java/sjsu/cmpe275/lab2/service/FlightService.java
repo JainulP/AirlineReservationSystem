@@ -9,11 +9,14 @@ import sjsu.cmpe275.lab2.entity.Flight;
 import sjsu.cmpe275.lab2.entity.PassengerEntity;
 import sjsu.cmpe275.lab2.repository.FlightRepository;
 import sjsu.cmpe275.lab2.utils.Utils;
+
+import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
+@Transactional(Transactional.TxType.REQUIRED)
 public class FlightService {
 
 	@Autowired
