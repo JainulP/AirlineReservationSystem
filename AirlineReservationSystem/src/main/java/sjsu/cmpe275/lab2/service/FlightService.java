@@ -22,6 +22,10 @@ public class FlightService {
 	@Autowired
 	private FlightRepository flightRepository;
 
+
+	/*
+	 * Return flight details for the given flightNumber
+	 */
 	public FlightEntity getFlight(String flightNumber) {
 		Optional<FlightEntity> flight = flightRepository.findById(flightNumber);
 		if (flight.isPresent()) {
@@ -30,10 +34,11 @@ public class FlightService {
 			return null;
 	}
 
+	/*
+	 * Creates or updates existing flight and returns the created or updated flight
+	 * Cannot set the capacity of flight less than the reservation already made for the flight if flight is updated
+	 */
 	public FlightEntity createOrUpdate(FlightEntity flight) {
-		// flight.setSeatsLeft(flight.getPlane().getCapacity());
-		// need to update seatsleft when capacity is updated
-
 		Optional<FlightEntity> existingFlight = flightRepository.findById(flight.getFlightNumber());
 		if (existingFlight.isPresent()) {
 			FlightEntity oldFlight = flightRepository.findById(flight.getFlightNumber()).get();
@@ -46,18 +51,27 @@ public class FlightService {
 			return created;
 		}
 	}
-
+	/*
+	 * Deletes the flight for the given flightNumber
+	 */
 	public void deleteFlight(String flightNumber) {
 		FlightEntity flight = flightRepository.findById(flightNumber).get();
 		flightRepository.delete(flight);
 	}
 
+	/*
+	 * Finds and Returns the List of flights for the given flight numbers
+	 */
 	public List<FlightEntity> findAllFlights(List<String> flightnumbers) {
 		List<FlightEntity> flights = (List<FlightEntity>) flightRepository.findAllById(flightnumbers);
 		
 		return flights;
 	}
 
+
+	/*
+	 * Checks if there is any time overlapping for the passenger's flights
+	 */
 	public boolean isTimeOverlapping(FlightEntity flight, String arrivalTime, String departureTime) {
 		List<PassengerEntity> passengers = flight.getPassengers();
 
@@ -84,6 +98,9 @@ public class FlightService {
 		return false;
 	}
 
+	/*
+	 * Checks the seat availability in each of the flights given as input
+	 */
 	public boolean checkAvailability(List<FlightEntity> flights) {
 		for (int i = 0; i < flights.size(); i++) {
 			if (flights.get(i).getSeatsLeft() < 1) {
@@ -94,13 +111,11 @@ public class FlightService {
 
 	}
 
+	/*
+	 * Checks the time overlapping between the flights to be booked and the flights already been booked while updating the reservation
+	 */
 	public boolean checkIfFlightsOverlap(List<FlightEntity> flightstoBeBooked, PassengerEntity passenger) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh", Locale.US);
-		/*
-		 * List<String> passengerFlights = (List<String>)
-		 * flightRepository.findByPassengerId(passenger.getId()); List<Flight> flights =
-		 * (List<Flight>) flightRepository.findAllById(passengerFlights);
-		 */
 		List<FlightEntity> flights = findFlightsByPassengerId(passenger.getId());
 		for (int i = 0; i < flightstoBeBooked.size(); i++) {
 			Date arrival = null;
@@ -124,7 +139,6 @@ public class FlightService {
 						if(!flights.get(j).getFlightNumber().equals(flightstoBeBooked.get(i).getFlightNumber())){
 							return true;
 						}
-
 					}
 				} catch (ParseException e) {
 					System.out.println("BadRequest " + "417" + " Invalid Date Format");
@@ -134,16 +148,14 @@ public class FlightService {
 		return false;
 	}
 
+	/*
+	 * Returns list of flights booked by the passenger
+	 */
 	public List<FlightEntity> findFlightsByPassengerId(String passengerId) {
 		List<String> passengerFlights = (List<String>) flightRepository.findByPassengerId(passengerId);
 		List<FlightEntity> flights = (List<FlightEntity>) flightRepository.findAllById(passengerFlights);
 		return flights;
 	}
 	
-	/*public Set<Flight> findFlightsByPassengerIdSet(String passengerId) {
-		Set<String> passengerFlights = (Set<String>) flightRepository.findByPassengerId(passengerId);
-		Set<Flight> flights = (Set<Flight>) flightRepository.findAllById(passengerFlights);
-		return flights;
-	}
-*/
+
 }

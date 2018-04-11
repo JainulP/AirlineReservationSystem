@@ -36,6 +36,10 @@ public class ReservationService {
 	@Autowired
 	private FlightService flightService;
 
+
+	/*
+	 * Return reservation details for the given reservation number
+	 */
 	public ReservationEntity getReservation(String reservationNumber) {
 		Optional<ReservationEntity> reservation = reservationRepository.findById(reservationNumber);
 		if (reservation.isPresent()) {
@@ -45,6 +49,10 @@ public class ReservationService {
 			return null;
 	}
 
+
+	/*
+	 * Creates the reservation and returns the created reservation
+	 */
 	public ReservationEntity createReservation(ReservationEntity reservationTemp) {
 		List<FlightEntity> flights = reservationTemp.getFlights();
 		passengerService.decreaseSeats(flights);
@@ -57,6 +65,9 @@ public class ReservationService {
 		return reservation;
 	}
 
+	/*
+	 * Updates the reservation and returns the updated reservation
+	 */
 	public ReservationEntity updateReservation(ReservationEntity reservationTemp) {
 		List<FlightEntity> flights = reservationTemp.getFlights();
 		passengerService.decreaseSeats(flights);
@@ -69,6 +80,9 @@ public class ReservationService {
 		return reservation;
 	}
 
+	/*
+	 * Deletes the reservation for the given reservation number
+	 */
 	public boolean deleteReservation(String reservationNum) {
 		boolean doesExists = reservationRepository.existsById(reservationNum);
 		if (doesExists) {
@@ -83,6 +97,10 @@ public class ReservationService {
 		}
 	}
 
+
+	/*
+	 * Returns the List of reservation based on the given input criteria
+	 */
 	public List<ReservationEntity> searchReservation(String passengerId, String origin, String destination,
 			String flightNumber) {
 		Set<String> reservations_passengerid = new HashSet<String>();

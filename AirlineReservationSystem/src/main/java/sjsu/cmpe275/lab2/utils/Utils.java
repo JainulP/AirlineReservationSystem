@@ -4,6 +4,9 @@ import org.json.JSONObject;
 
 public class Utils {
 
+    /*
+	 * Generates the JSON for any error geneated or any Bad Request
+	 */
     public static String generateErrorResponse(String header, int code, String message){
         JSONObject response = new JSONObject();
         JSONObject error = new JSONObject();

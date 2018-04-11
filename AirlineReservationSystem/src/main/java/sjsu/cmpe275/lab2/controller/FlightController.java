@@ -46,7 +46,6 @@ public class FlightController {
 					flight.getSeatsLeft(), flight.getDescription(), flight.getPlane(), flight.getPassengers());
 			return new ResponseEntity<>(flightTemp, HttpStatus.OK);
 		}
-			//return new ResponseEntity<>(flight, HttpStatus.OK);
 
 	}
 
