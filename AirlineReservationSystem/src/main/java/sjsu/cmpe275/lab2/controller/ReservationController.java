@@ -120,23 +120,47 @@ public class ReservationController {
 	@JsonView(View.ReservationView.class)
 	@RequestMapping(value = "/{number}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> updateReservation(@PathVariable("number") String reservationNumber,
-			@RequestParam(value = "flightsAdded") String flightsAdded,
-			@RequestParam(value = "flightsRemoved") String flightsRemoved) {
+			@RequestParam(value = "flightsAdded" , required = false) String flightsAdded,
+			@RequestParam(value = "flightsRemoved", required = false) String flightsRemoved) {
 		ReservationEntity reservation = reservationService.getReservation(reservationNumber);
 		boolean status_add = true;
 
-		List<String> flightsAddedListNums = new ArrayList<String>(Arrays.asList(flightsAdded.split(",")));
-		List<FlightEntity> flightsAddedList = flightService.findAllFlights(flightsAddedListNums);
-		status_add = flightService.checkAvailability(flightsAddedList);
+		List<String> flightsAddedListNums = new ArrayList<String>();
+		List<FlightEntity> flightsAddedList = new ArrayList<>();
+		if(flightsAdded != null && flightsAddedListNums.size() ==0){
+			return new ResponseEntity<>(Utils.generateErrorResponse("BadRequest", 400, "Flights to be added can not be null"),
+					HttpStatus.BAD_REQUEST);
+		}
+		else{
+			if(flightsAdded != null && flightsAddedList.size()>0) {
+				flightsAddedListNums = new ArrayList<String>(Arrays.asList(flightsAdded.split(",")));
+				flightsAddedList = flightService.findAllFlights(flightsAddedListNums);
+				status_add = flightService.checkAvailability(flightsAddedList);
+			}
 
-		List<String> flightsRemovedListNums = new ArrayList<String>(Arrays.asList(flightsRemoved.split(",")));
-		List<FlightEntity> flightsRemovedList = flightService.findAllFlights(flightsRemovedListNums);
+		}
+
+		List<String> flightsRemovedListNums = new ArrayList<String>();
+		List<FlightEntity> flightsRemovedList = new ArrayList<>();
+
+		if(flightsRemoved != null && flightsRemovedList.size() ==0 ){
+			return new ResponseEntity<>(Utils.generateErrorResponse("BadRequest", 400, "Flights to be removed can not be null"),
+					HttpStatus.NOT_FOUND);
+		}
+		else{
+			if(flightsRemoved != null && flightsRemovedList.size() > 0 ){
+				flightsRemovedListNums = new ArrayList<String>(Arrays.asList(flightsRemoved.split(",")));
+				flightsRemovedList = flightService.findAllFlights(flightsRemovedListNums);
+			}
+		}
 
 		if (status_add == false) {
 			return new ResponseEntity<>(Utils.generateErrorResponse("BadRequest", 404, "Seats not available"),
 					HttpStatus.NOT_FOUND);
 		}
-		passengerService.increaseSeats(flightsRemovedList);
+		if(flightsRemovedList.size()>0) {
+			passengerService.increaseSeats(flightsRemovedList);
+		}
 		List<FlightEntity> flights = new ArrayList<FlightEntity>();
 		flights = reservation.getFlights();
 

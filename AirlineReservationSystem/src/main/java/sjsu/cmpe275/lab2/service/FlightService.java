@@ -119,9 +119,12 @@ public class FlightService {
 					Date max = dateFormat.parse(flights.get(j).getArrivalTime());
 					Date min = dateFormat.parse(flights.get(j).getDepartureTime());
 
-					if ((arrival.compareTo(min) > 0 && arrival.compareTo(max) < 0)
-							|| (departure.compareTo(min) > 0 && departure.compareTo(max) < 0)) {
-						return true;
+					if ((arrival.compareTo(min) >= 0 && arrival.compareTo(max) <= 0)
+							|| (departure.compareTo(min) >= 0 && departure.compareTo(max) <= 0)) {
+						if(!flights.get(j).getFlightNumber().equals(flightstoBeBooked.get(i).getFlightNumber())){
+							return true;
+						}
+
 					}
 				} catch (ParseException e) {
 					System.out.println("BadRequest " + "417" + " Invalid Date Format");
