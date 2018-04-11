@@ -8,3 +8,4 @@ AirlineReservationSystem/target/*
 .recommenders/*
 RemoteSystemsTempFiles/.project
 *.prefs
+*.properties
