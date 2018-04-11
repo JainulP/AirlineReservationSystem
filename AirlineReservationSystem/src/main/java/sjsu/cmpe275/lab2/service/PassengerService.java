@@ -62,11 +62,12 @@ public class PassengerService {
 	 */
 	public boolean deletePassenger(String passengerId) {
 		// increase the seats in flights
-		PassengerEntity passenger = passengerRepository.findById(passengerId).get();
-		List<FlightEntity> flights = passenger.getFlights();
-		increaseSeats(flights);
+
 		boolean doesExists = passengerRepository.existsById(passengerId);
 		if (doesExists) {
+			PassengerEntity passenger = passengerRepository.findById(passengerId).get();
+			List<FlightEntity> flights = passenger.getFlights();
+			increaseSeats(flights);
 			passengerRepository.deleteById(passengerId);
 			return true;
 		} else {
@@ -88,5 +89,9 @@ public class PassengerService {
 			flights.get(i).setSeatsLeft(count);
 		}
 		return (List<FlightEntity>) flightRepository.saveAll(flights);
+	}
+
+	public PassengerEntity findByPhone(String phone){
+		return  passengerRepository.findByPhone(phone);
 	}
 }

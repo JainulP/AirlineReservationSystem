@@ -70,8 +70,8 @@ public class FlightService {
 					Date min = dateFormat.parse(departureTime);
 					Date max = dateFormat.parse(arrivalTime);
 
-					if ((arrival.compareTo(min) >= 0 && arrival.compareTo(max) <= 0)
-							|| (departure.compareTo(min) >= 0 && departure.compareTo(max) <= 0)) {
+					if ((arrival.compareTo(min) > 0 && arrival.compareTo(max) < 0)
+							|| (departure.compareTo(min) > 0 && departure.compareTo(max) < 0)) {
 						return true;
 					}
 
@@ -110,6 +110,7 @@ public class FlightService {
 			} catch (ParseException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
+				System.out.println("BadRequest " + "417" + " Invalid Date Format");
 			}
 
 			for (int j = 0; j < flights.size(); i++) {
@@ -117,8 +118,8 @@ public class FlightService {
 					Date max = dateFormat.parse(flights.get(j).getArrivalTime());
 					Date min = dateFormat.parse(flights.get(j).getDepartureTime());
 
-					if ((arrival.compareTo(min) >= 0 && arrival.compareTo(max) <= 0)
-							|| (departure.compareTo(min) >= 0 && departure.compareTo(max) <= 0)) {
+					if ((arrival.compareTo(min) > 0 && arrival.compareTo(max) < 0)
+							|| (departure.compareTo(min) > 0 && departure.compareTo(max) < 0)) {
 						return true;
 					}
 				} catch (ParseException e) {

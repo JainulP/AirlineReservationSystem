@@ -30,13 +30,13 @@ public interface ReservationRepository extends CrudRepository<ReservationEntity,
 	@Query(value = "SELECT  reservation_number FROM reservation WHERE id = ?1", nativeQuery = true)
 	Set<String> findByPassengerIdSet(String passengerId);
 
-	@Query(value = "SELECT  r.reservation_number FROM reservation_flight rf,RESERVATION r WHERE rf.flight_num = ?1 AND r.reservation_number = rf.reservation_num", nativeQuery = true)
+	@Query(value = "SELECT  r.reservation_number FROM reservation_flight rf,reservation r WHERE rf.flight_num = ?1 AND r.reservation_number = rf.reservation_num", nativeQuery = true)
 	Set<String> findByFlightNum(String flightNum);
 
-	@Query(value = "SELECT  r.reservation_number FROM reservation_flight rf,RESERVATION r, flight f WHERE rf.flight_num = f.flight_number AND r.reservation_number = rf.reservation_num AND f.origin = ?1", nativeQuery = true)
+	@Query(value = "SELECT  r.reservation_number FROM reservation_flight rf,reservation r, flight f WHERE rf.flight_num = f.flight_number AND r.reservation_number = rf.reservation_num AND f.origin = ?1", nativeQuery = true)
 	Set<String> findByOrigin(String origin);
 	
-	@Query(value = "SELECT  r.reservation_number FROM reservation_flight rf,RESERVATION r, flight f WHERE rf.flight_num = f.flight_number AND r.reservation_number = rf.reservation_num AND f.destination_to = ?1", nativeQuery = true)
+	@Query(value = "SELECT  r.reservation_number FROM reservation_flight rf,reservation r, flight f WHERE rf.flight_num = f.flight_number AND r.reservation_number = rf.reservation_num AND f.destination_to = ?1", nativeQuery = true)
 	Set<String> findByDestination(String destination);
 
 }

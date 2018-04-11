@@ -6,5 +6,9 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import sjsu.cmpe275.lab2.entity.PassengerEntity;
 
+import java.util.List;
+
 public interface PassengerRepository extends CrudRepository<PassengerEntity, String> {
+    @Query(value = "SELECT * FROM passenger WHERE phone = ?1", nativeQuery = true)
+    PassengerEntity findByPhone(String phone);
 }

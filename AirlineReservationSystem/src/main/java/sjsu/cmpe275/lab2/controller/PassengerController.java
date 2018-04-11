@@ -18,6 +18,8 @@ import sjsu.cmpe275.lab2.utils.Response;
 import sjsu.cmpe275.lab2.utils.Utils;
 import sjsu.cmpe275.lab2.utils.View;
 
+import java.util.Set;
+
 @RestController
 @RequestMapping("/passenger")
 public class PassengerController {
@@ -61,8 +63,15 @@ public class PassengerController {
 			@RequestParam(value = "lastname") String lastname, @RequestParam(value = "age") int age,
 			@RequestParam(value = "gender") String gender, @RequestParam(value = "phone") String phone) {
 		PassengerEntity passenger = new PassengerEntity(firstname, lastname, age, gender, phone);
-		PassengerEntity passenger_res = passengerService.createPassenger(passenger);
-		return new ResponseEntity<>(passenger_res, HttpStatus.CREATED);
+        PassengerEntity passengerWithSamePhone = passengerService.findByPhone(phone);
+        if(passengerWithSamePhone == null) {
+			PassengerEntity passenger_res = passengerService.createPassenger(passenger);
+			return new ResponseEntity<>(passenger_res, HttpStatus.CREATED);
+		}
+		else{
+			return new ResponseEntity<>(Utils.generateErrorResponse("BadRequest", 400,
+					"Phone number must be unique! Another passenger with same phone number exists."), HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	/*
@@ -76,8 +85,15 @@ public class PassengerController {
 			@RequestParam(value = "phone") String phone) {
 		PassengerEntity passenger = new PassengerEntity(firstname, lastname, age, gender, phone);
 		passenger.setId(passengerId);
-		PassengerEntity passenger_res = passengerService.updatePassenger(passenger);
-		return new ResponseEntity<>(passenger_res, HttpStatus.OK);
+		PassengerEntity passengerWithSamePhone = passengerService.findByPhone(phone);
+		if(passengerWithSamePhone == null || passengerWithSamePhone.getId().equals(passengerId)) {
+			PassengerEntity passenger_res = passengerService.updatePassenger(passenger);
+			return new ResponseEntity<>(passenger_res, HttpStatus.OK);
+		}
+		else{
+			return new ResponseEntity<>(Utils.generateErrorResponse("BadRequest", 400,
+					"Phone number must be unique! Another passenger with same phone number exists."), HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	/*
