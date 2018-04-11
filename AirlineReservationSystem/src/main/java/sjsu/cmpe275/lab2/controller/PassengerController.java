@@ -33,10 +33,18 @@ public class PassengerController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getPassengerJson(@PathVariable("id") String passengerId) {
 		PassengerEntity passenger = passengerService.getPassenger(passengerId);
-		Passenger passengerTemp = new Passenger(passenger.getId(), passenger.getFirstname(),
-				passenger.getLastname(), passenger.getAge(), passenger.getGender(), passenger.getPhone(),
-				passenger.getReservations());
-		return new ResponseEntity<>(passengerTemp, HttpStatus.OK);
+		if (passenger == null) {
+			return new ResponseEntity<>(
+					Utils.generateErrorResponse("BadRequest", 404,
+							"Sorry, the requested passenger with id " + passengerId + " does not exist"),
+					HttpStatus.NOT_FOUND);
+		} else {
+			Passenger passengerTemp = new Passenger(passenger.getId(), passenger.getFirstname(),
+					passenger.getLastname(), passenger.getAge(), passenger.getGender(), passenger.getPhone(),
+					passenger.getReservations());
+			return new ResponseEntity<>(passengerTemp, HttpStatus.OK);
+		}
+
 	}
 
 	/*
@@ -48,10 +56,17 @@ public class PassengerController {
 	public ResponseEntity<?> getPassengerXml(@PathVariable("id") String passengerId,
 			@RequestParam(value = "xml") String isXml) {
 		PassengerEntity passenger = passengerService.getPassenger(passengerId);
-		Passenger passengerTemp = new Passenger(passenger.getId(), passenger.getFirstname(),
-				passenger.getLastname(), passenger.getAge(), passenger.getGender(), passenger.getPhone(),
-				passenger.getReservations());
-		return new ResponseEntity<>(passengerTemp, HttpStatus.OK);
+		if (passenger == null) {
+			return new ResponseEntity<>(
+					Utils.generateErrorResponse("BadRequest", 404,
+							"Sorry, the requested passenger with id " + passengerId + " does not exist"),
+					HttpStatus.NOT_FOUND);
+		} else {
+			Passenger passengerTemp = new Passenger(passenger.getId(), passenger.getFirstname(),
+					passenger.getLastname(), passenger.getAge(), passenger.getGender(), passenger.getPhone(),
+					passenger.getReservations());
+			return new ResponseEntity<>(passengerTemp, HttpStatus.OK);
+		}
 	}
 
 	/*
@@ -63,14 +78,15 @@ public class PassengerController {
 			@RequestParam(value = "lastname") String lastname, @RequestParam(value = "age") int age,
 			@RequestParam(value = "gender") String gender, @RequestParam(value = "phone") String phone) {
 		PassengerEntity passenger = new PassengerEntity(firstname, lastname, age, gender, phone);
-        PassengerEntity passengerWithSamePhone = passengerService.findByPhone(phone);
-        if(passengerWithSamePhone == null) {
+		PassengerEntity passengerWithSamePhone = passengerService.findByPhone(phone);
+		if (passengerWithSamePhone == null) {
 			PassengerEntity passenger_res = passengerService.createPassenger(passenger);
 			return new ResponseEntity<>(passenger_res, HttpStatus.CREATED);
-		}
-		else{
-			return new ResponseEntity<>(Utils.generateErrorResponse("BadRequest", 400,
-					"Phone number must be unique! Another passenger with same phone number exists."), HttpStatus.BAD_REQUEST);
+		} else {
+			return new ResponseEntity<>(
+					Utils.generateErrorResponse("BadRequest", 400,
+							"Phone number must be unique! Another passenger with same phone number exists."),
+					HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -86,13 +102,14 @@ public class PassengerController {
 		PassengerEntity passenger = new PassengerEntity(firstname, lastname, age, gender, phone);
 		passenger.setId(passengerId);
 		PassengerEntity passengerWithSamePhone = passengerService.findByPhone(phone);
-		if(passengerWithSamePhone == null || passengerWithSamePhone.getId().equals(passengerId)) {
+		if (passengerWithSamePhone == null || passengerWithSamePhone.getId().equals(passengerId)) {
 			PassengerEntity passenger_res = passengerService.updatePassenger(passenger);
 			return new ResponseEntity<>(passenger_res, HttpStatus.OK);
-		}
-		else{
-			return new ResponseEntity<>(Utils.generateErrorResponse("BadRequest", 400,
-					"Phone number must be unique! Another passenger with same phone number exists."), HttpStatus.BAD_REQUEST);
+		} else {
+			return new ResponseEntity<>(
+					Utils.generateErrorResponse("BadRequest", 400,
+							"Phone number must be unique! Another passenger with same phone number exists."),
+					HttpStatus.BAD_REQUEST);
 		}
 	}
 
