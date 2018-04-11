@@ -54,6 +54,7 @@ public class FlightService {
 
 	public List<FlightEntity> findAllFlights(List<String> flightnumbers) {
 		List<FlightEntity> flights = (List<FlightEntity>) flightRepository.findAllById(flightnumbers);
+		
 		return flights;
 	}
 
@@ -113,7 +114,7 @@ public class FlightService {
 				System.out.println("BadRequest " + "417" + " Invalid Date Format");
 			}
 
-			for (int j = 0; j < flights.size(); i++) {
+			for (int j = 0; j < flights.size(); j++) {
 				try {
 					Date max = dateFormat.parse(flights.get(j).getArrivalTime());
 					Date min = dateFormat.parse(flights.get(j).getDepartureTime());
