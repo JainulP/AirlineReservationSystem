@@ -24,12 +24,13 @@ public class PassengerService {
 	private FlightRepository flightRepository;
 
 	/*
+	 * gets the passenger
+	 * 
 	 * @param passengerId Id of the passenger whose id needs to be fetched
 	 * 
 	 * @return the passenger details
 	 */
 	public PassengerEntity getPassenger(String passengerId) {
-		//return passengerRepository.findById(passengerId).get();
 		Optional<PassengerEntity> passenger = passengerRepository.findById(passengerId);
 		if (passenger.isPresent()) {
 			return passenger.get();
@@ -38,6 +39,8 @@ public class PassengerService {
 	}
 
 	/*
+	 * Creates the passenger
+	 * 
 	 * @param passenger create a passenger with the specified details
 	 * 
 	 * @return the passenger
@@ -47,6 +50,8 @@ public class PassengerService {
 	}
 
 	/*
+	 * Updates the passenger
+	 * 
 	 * @param passenger update a passenger with the specified details
 	 * 
 	 * @return the passenger
@@ -62,13 +67,14 @@ public class PassengerService {
 	}
 
 	/*
+	 * Deletes the passenger
+	 * 
 	 * @param passengerId Id of the passenger to be deleted
 	 * 
 	 * @return the status of the operation
 	 */
 	public boolean deletePassenger(String passengerId) {
 		// increase the seats in flights
-
 		boolean doesExists = passengerRepository.existsById(passengerId);
 		if (doesExists) {
 			PassengerEntity passenger = passengerRepository.findById(passengerId).get();
@@ -81,6 +87,13 @@ public class PassengerService {
 		}
 	}
 
+	/*
+	 * Returns the list of flights after modification
+	 * 
+	 * @param list of flights whose seats needs to be reduced
+	 * 
+	 * @return the list of flights
+	 */
 	public List<FlightEntity> decreaseSeats(List<FlightEntity> flights) {
 		for (int i = 0; i < flights.size(); i++) {
 			int count = flights.get(i).getSeatsLeft() - 1;
@@ -88,7 +101,14 @@ public class PassengerService {
 		}
 		return (List<FlightEntity>) flightRepository.saveAll(flights);
 	}
-	
+
+	/*
+	 * Returns the list of flights after modification
+	 * 
+	 * @param list of flights whose seats needs to be increased
+	 * 
+	 * @return the list of flights
+	 */
 	public List<FlightEntity> increaseSeats(List<FlightEntity> flights) {
 		for (int i = 0; i < flights.size(); i++) {
 			int count = flights.get(i).getSeatsLeft() + 1;
@@ -97,7 +117,14 @@ public class PassengerService {
 		return (List<FlightEntity>) flightRepository.saveAll(flights);
 	}
 
-	public PassengerEntity findByPhone(String phone){
-		return  passengerRepository.findByPhone(phone);
+	/*
+	 * returns the list of passengers having the specified phone number
+	 * 
+	 * @param phone number
+	 * 
+	 * @return the list of passengers
+	 */
+	public PassengerEntity findByPhone(String phone) {
+		return passengerRepository.findByPhone(phone);
 	}
 }
