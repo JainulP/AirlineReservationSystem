@@ -101,7 +101,12 @@ public class ReservationController {
 					HttpStatus.NOT_FOUND);
 		}
 
-		passenger.setFlights(flights);
+		PassengerEntity pTemp = passengerService.getPassenger(passengerId);
+		List<FlightEntity> flightsExisting = new ArrayList();
+		flightsExisting = pTemp.getFlights();
+		flightsExisting.addAll(flights);
+		passenger.setFlights(flightsExisting);
+
 		reservation.setFlights(flights);
 		ReservationEntity reservation_res = reservationService.createReservation(reservation);
 		Reservation reservationTemp = new Reservation(reservation_res.getReservationNumber(),
@@ -131,12 +136,19 @@ public class ReservationController {
 			return new ResponseEntity<>(Utils.generateErrorResponse("BadRequest", 404, "Seats not available"),
 					HttpStatus.NOT_FOUND);
 		}
-
+		passengerService.increaseSeats(flightsRemovedList);
 		List<FlightEntity> flights = new ArrayList<FlightEntity>();
 		flights = reservation.getFlights();
+
+		PassengerEntity passenger = reservation.getPassenger();
+		List<FlightEntity> flightsExisting = new ArrayList();
+		PassengerEntity pTemp = passengerService.getPassenger(passenger.getId());
+		flightsExisting = pTemp.getFlights();
+
 		for (int i = 0; i < flightsRemovedList.size(); i++) {
 			FlightEntity flight = flightsRemovedList.get(i);
 			flights.remove(flight);
+			flightsExisting.remove(flight);
 		}
 
 		for (int i = 0; i < flightsAddedList.size(); i++) {
@@ -144,8 +156,10 @@ public class ReservationController {
 			flights.add(flight);
 		}
 
-		PassengerEntity passenger = reservation.getPassenger();
-		passenger.setFlights(flights);
+		flightsExisting.addAll(flights);
+
+		passenger.setFlights(flightsExisting);
+		// passenger.setFlights(flights);
 		ReservationEntity reservation_res = reservationService.updateReservation(reservation);
 		Reservation reservationTemp = new Reservation(reservation_res.getReservationNumber(),
 				reservation_res.getPassenger(), reservation_res.getPrice(), reservation_res.getFlights());
