@@ -34,11 +34,13 @@ public class PassengerController {
 	public ResponseEntity<?> getPassengerJson(@PathVariable("id") String passengerId) {
 		PassengerEntity passenger = passengerService.getPassenger(passengerId);
 		if (passenger == null) {
+			// return the error
 			return new ResponseEntity<>(
 					Utils.generateErrorResponse("BadRequest", 404,
 							"Sorry, the requested passenger with id " + passengerId + " does not exist"),
 					HttpStatus.NOT_FOUND);
 		} else {
+			// return the passenger
 			Passenger passengerTemp = new Passenger(passenger.getId(), passenger.getFirstname(),
 					passenger.getLastname(), passenger.getAge(), passenger.getGender(), passenger.getPhone(),
 					passenger.getReservations());
@@ -57,11 +59,13 @@ public class PassengerController {
 			@RequestParam(value = "xml") String isXml) {
 		PassengerEntity passenger = passengerService.getPassenger(passengerId);
 		if (passenger == null) {
+			// return the error
 			return new ResponseEntity<>(
 					Utils.generateErrorResponse("BadRequest", 404,
 							"Sorry, the requested passenger with id " + passengerId + " does not exist"),
 					HttpStatus.NOT_FOUND);
 		} else {
+			// return the passenger
 			Passenger passengerTemp = new Passenger(passenger.getId(), passenger.getFirstname(),
 					passenger.getLastname(), passenger.getAge(), passenger.getGender(), passenger.getPhone(),
 					passenger.getReservations());
@@ -79,10 +83,12 @@ public class PassengerController {
 			@RequestParam(value = "gender") String gender, @RequestParam(value = "phone") String phone) {
 		PassengerEntity passenger = new PassengerEntity(firstname, lastname, age, gender, phone);
 		PassengerEntity passengerWithSamePhone = passengerService.findByPhone(phone);
+		// check if the phone number exists
 		if (passengerWithSamePhone == null) {
 			PassengerEntity passenger_res = passengerService.createPassenger(passenger);
 			return new ResponseEntity<>(passenger_res, HttpStatus.CREATED);
 		} else {
+			// return the error
 			return new ResponseEntity<>(
 					Utils.generateErrorResponse("BadRequest", 400,
 							"Phone number must be unique! Another passenger with same phone number exists."),
@@ -121,9 +127,11 @@ public class PassengerController {
 	public ResponseEntity<?> deletePassenger(@PathVariable("id") String passengerId) {
 		boolean success = passengerService.deletePassenger(passengerId);
 		if (success) {
+			// return the passenger
 			return new ResponseEntity<>(
 					new Response("Passenger with id " + passengerId + " is deleted successfully", 200), HttpStatus.OK);
 		} else {
+			// return the error
 			return new ResponseEntity<>(Utils.generateErrorResponse("BadRequest", 404,
 					"Passenger with id " + passengerId + " does not exist"), HttpStatus.NOT_FOUND);
 		}
