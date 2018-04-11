@@ -1,6 +1,7 @@
 package sjsu.cmpe275.lab2.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,12 @@ public class PassengerService {
 	 * @return the passenger details
 	 */
 	public PassengerEntity getPassenger(String passengerId) {
-		return passengerRepository.findById(passengerId).get();
+		//return passengerRepository.findById(passengerId).get();
+		Optional<PassengerEntity> passenger = passengerRepository.findById(passengerId);
+		if (passenger.isPresent()) {
+			return passenger.get();
+		} else
+			return null;
 	}
 
 	/*
