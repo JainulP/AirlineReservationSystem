@@ -109,4 +109,26 @@ public class TestAirlineReservationSystem {
 		}
 
 	}
+
+	@Test
+	public void getReservationFailure() {
+		try {
+			HttpResponse<JsonNode> jsonResponse = Unirest
+					.get("http://localhost:8080/reservation/d9fcbcc0-45f4-4680-98427-08b718cf0a12")
+					.header("accept", "application/json").asJson();
+
+			JSONObject res = jsonResponse.getBody().getObject();
+			JSONObject res1 = res.getJSONObject("BadRequest");
+			System.out.println(res);
+			String msg = res1.getString("msg");
+			String code = res1.getString("code");
+
+			assertEquals("Reservation with number d9fcbcc0-45f4-4680-98427-08b718cf0a12 does not exist", msg);
+			assertEquals("404", code);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
 }
